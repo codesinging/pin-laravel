@@ -19,4 +19,5 @@ class UserModel extends User
     use HasShortflakePrimary;
 
     use Instance;
+    use SerializeDate;
 }

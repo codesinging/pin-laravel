@@ -14,7 +14,8 @@ class BaseModel extends Model
 {
     use HasFactory;
 
-    use Instance;
-
     use HasShortflakePrimary;
+
+    use Instance;
+    use SerializeDate;
 }
