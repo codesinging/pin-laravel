@@ -21,7 +21,7 @@ enum ErrorCode: int implements ErrorLabel
     public function label(): string
     {
         return match ($this) {
-            self::Error => '程序错误',
+            self::Error => '响应错误',
         };
     }
 }
