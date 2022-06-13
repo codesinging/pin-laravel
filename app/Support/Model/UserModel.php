@@ -28,4 +28,5 @@ class UserModel extends User
     use SerializeDate;
     use Lister;
     use Sanitize;
+    use StaticMethods;
 }
