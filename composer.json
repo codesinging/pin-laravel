@@ -11,7 +11,8 @@
         "kra8/laravel-snowflake": "^2.1",
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "overtrue/laravel-lang": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
