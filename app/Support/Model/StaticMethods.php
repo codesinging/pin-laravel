@@ -6,8 +6,11 @@
 
 namespace App\Support\Model;
 
+use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Expression;
 
 trait StaticMethods
 {
@@ -46,5 +49,20 @@ trait StaticMethods
     public static function finds(mixed $id, array|string $columns = ['*']): Model|Collection|array|static|null
     {
         return (new static())->find($id, $columns);
+    }
+
+    /**
+     * 添加一个 where 查询
+     *
+     * @param Closure|string|array|Expression $column
+     * @param mixed $operator
+     * @param mixed $value
+     * @param string $boolean
+     *
+     * @return Builder
+     */
+    public static function wheres(Closure|string|array|Expression $column, mixed $operator = null, mixed $value = null, string $boolean = 'and'): Builder
+    {
+        return (new static())->where($column, $operator, $value, $boolean);
     }
 }
