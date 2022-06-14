@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Support\Routing;
 
-use App\Exceptions\ErrorCode;
+use App\Exceptions\Errors;
 use App\Support\Routing\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Tests\TestCase;
@@ -34,7 +34,7 @@ class ApiResponseTest extends TestCase
         self::assertEquals('error', ApiResponse::error('error')->getData(true)['message']);
         self::assertEquals(1, ApiResponse::error('error')->getData(true)['code']);
         self::assertEquals(900100, ApiResponse::error('error', 900100)->getData(true)['code']);
-        self::assertEquals(ErrorCode::Error->label(), ApiResponse::error(ErrorCode::Error)->getData(true)['message']);
-        self::assertEquals(ErrorCode::Error(), ApiResponse::error(ErrorCode::Error)->getData(true)['code']);
+        self::assertEquals(Errors::Error->label(), ApiResponse::error(Errors::Error)->getData(true)['message']);
+        self::assertEquals(Errors::Error(), ApiResponse::error(Errors::Error)->getData(true)['code']);
     }
 }

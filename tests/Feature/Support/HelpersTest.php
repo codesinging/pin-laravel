@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Support;
 
-use App\Exceptions\ErrorCode;
+use App\Exceptions\Errors;
 use Illuminate\Http\JsonResponse;
 use Tests\TestCase;
 
@@ -33,7 +33,7 @@ class HelpersTest extends TestCase
         self::assertEquals('error', error('error')->getData(true)['message']);
         self::assertEquals(1, error('error')->getData(true)['code']);
         self::assertEquals(900100, error('error', 900100)->getData(true)['code']);
-        self::assertEquals(ErrorCode::Error->label(), error(ErrorCode::Error)->getData(true)['message']);
-        self::assertEquals(ErrorCode::Error(), error(ErrorCode::Error)->getData(true)['code']);
+        self::assertEquals(Errors::Error->label(), error(Errors::Error)->getData(true)['message']);
+        self::assertEquals(Errors::Error(), error(Errors::Error)->getData(true)['code']);
     }
 }

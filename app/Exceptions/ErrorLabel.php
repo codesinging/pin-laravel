@@ -4,7 +4,7 @@
  * Github: https://github.com/codesinging
  */
 
-namespace App\Support\Error;
+namespace App\Exceptions;
 
 interface ErrorLabel
 {

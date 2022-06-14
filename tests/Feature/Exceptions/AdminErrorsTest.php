@@ -6,18 +6,18 @@
 
 namespace Tests\Feature\Exceptions;
 
-use App\Exceptions\ErrorCode;
+use App\Exceptions\AdminErrors;
 use Tests\TestCase;
 
-class ErrorCodeTest extends TestCase
+class AdminErrorsTest extends TestCase
 {
     public function testInvoke()
     {
-        self::assertEquals(ErrorCode::Error->value, ErrorCode::Error());
+        self::assertEquals(AdminErrors::Error->value, AdminErrors::Error());
     }
 
     public function testLabel()
     {
-        self::assertEquals('程序错误', ErrorCode::Error->label());
+        self::assertEquals('响应错误', AdminErrors::Error->label());
     }
 }

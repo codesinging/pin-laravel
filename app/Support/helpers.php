@@ -4,7 +4,8 @@
  * Github: https://github.com/codesinging
  */
 
-use App\Exceptions\ErrorCode;
+use App\Exceptions\AdminErrors;
+use App\Exceptions\Errors;
 use App\Support\Routing\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -29,13 +30,13 @@ if (!function_exists('error')) {
     /**
      * 返回错误的 json 响应
      *
-     * @param ErrorCode|string|null $message
+     * @param Errors|AdminErrors|string|null $message
      * @param int $code
      * @param array|Model|Collection|null $data
      *
      * @return JsonResponse
      */
-    function error(ErrorCode|string $message = null, int $code = 1, mixed $data = null): JsonResponse
+    function error(Errors|AdminErrors|string $message = null, int $code = 1, mixed $data = null): JsonResponse
     {
         return ApiResponse::error($message, $code, $data);
     }

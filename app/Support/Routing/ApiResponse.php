@@ -6,7 +6,8 @@
 
 namespace App\Support\Routing;
 
-use App\Exceptions\ErrorCode;
+use App\Exceptions\AdminErrors;
+use App\Exceptions\Errors;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -31,15 +32,15 @@ class ApiResponse
     /**
      * 返回错误的 json 响应
      *
-     * @param ErrorCode|string|null $message
+     * @param Errors|AdminErrors|string|null $message
      * @param int $code
      * @param mixed|null $data
      *
      * @return JsonResponse
      */
-    public static function error(ErrorCode|string $message = null, int $code = 1, mixed $data = null): JsonResponse
+    public static function error(Errors|AdminErrors|string $message = null, int $code = 1, mixed $data = null): JsonResponse
     {
-        if ($message instanceof ErrorCode) {
+        if ($message instanceof Errors || $message instanceof AdminErrors) {
             $code = $message->value;
             $message = $message->label();
         }

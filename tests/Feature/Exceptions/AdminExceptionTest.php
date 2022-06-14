@@ -7,41 +7,40 @@
 namespace Tests\Feature\Exceptions;
 
 use App\Exceptions\AdminErrors;
-use App\Exceptions\Errors;
-use App\Exceptions\Exception;
+use App\Exceptions\AdminException;
 use Tests\TestCase;
 
-class ExceptionTest extends TestCase
+class AdminExceptionTest extends TestCase
 {
     /**
-     * @throws Exception
+     * @throws AdminException
      */
     public function testExceptionWithDefaultCode()
     {
         $this->expectExceptionCode(1);
         $this->expectExceptionMessage('error');
 
-        throw new Exception('error');
+        throw new AdminException('error');
     }
 
     /**
-     * @throws Exception
+     * @throws AdminException
      */
     public function testExceptionWithString()
     {
         $this->expectExceptionCode(100);
         $this->expectExceptionMessage('error');
 
-        throw new Exception('error', 100);
+        throw new AdminException('error', 100);
     }
 
     /**
-     * @throws Exception
+     * @throws AdminException
      */
     public function testExceptionWithErrorCode()
     {
-        $this->expectExceptionCode(Errors::Error());
-        $this->expectExceptionMessage(Errors::Error->label());
-        throw new Exception(Errors::Error);
+        $this->expectExceptionCode(AdminErrors::Error());
+        $this->expectExceptionMessage(AdminErrors::Error->label());
+        throw new AdminException(AdminErrors::Error);
     }
 }

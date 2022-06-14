@@ -8,11 +8,11 @@ namespace App\Exceptions;
 
 use Throwable;
 
-class Exception extends \Exception
+class AdminException extends \Exception
 {
-    public function __construct(string|Errors $message = "", int $code = 1, ?Throwable $previous = null)
+    public function __construct(string|AdminErrors $message = "", int $code = 1, ?Throwable $previous = null)
     {
-        if ($message instanceof Errors) {
+        if ($message instanceof AdminErrors) {
             $code = $message->value;
             $message = $message->label();
         }
