@@ -17,5 +17,7 @@ Route::middleware(['auth:sanctum'])
         Route::put('auth/update', [Admin\AuthController::class, 'update']);
         Route::put('auth/password', [Admin\AuthController::class, 'password']);
 
+        Route::put('administrators/{administrator}/permit', [Admin\AdministratorController::class, 'permit']);
+        Route::put('administrators/{administrator}/assign', [Admin\AdministratorController::class, 'assign']);
         Route::apiResource('administrators', Admin\AdministratorController::class);
     });

@@ -12,6 +12,7 @@ use App\Models\Administrator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 class AdministratorController extends Controller
@@ -68,7 +69,7 @@ class AdministratorController extends Controller
      */
     public function update(AdministratorRequest $request, Administrator $administrator): JsonResponse
     {
-        if ($administrator->isSuper()){
+        if ($administrator->isSuper()) {
             return error(Errors::Forbidden);
         }
 
@@ -103,10 +104,40 @@ class AdministratorController extends Controller
      */
     public function destroy(Administrator $administrator): JsonResponse
     {
-        if ($administrator->isSuper()){
+        if ($administrator->isSuper()) {
             return error(Errors::Forbidden);
         }
 
         return $administrator->delete() ? success('删除成功', $administrator) : error('删除失败');
+    }
+
+    /**
+     * @title 设置管理员权限
+     *
+     * @param Administrator $administrator
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function permit(Administrator $administrator, Request $request): JsonResponse
+    {
+        $administrator->syncPermissions(Arr::wrap($request->get('permissions', [])));
+
+        return success('设置管理员权限成功');
+    }
+
+    /**
+     * @title 指派管理员角色
+     *
+     * @param Administrator $administrator
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function assign(Administrator $administrator, Request $request): JsonResponse
+    {
+        $administrator->syncRoles(Arr::wrap($request->get('roles', [])));
+
+        return success('指派管理员角色成功');
     }
 }

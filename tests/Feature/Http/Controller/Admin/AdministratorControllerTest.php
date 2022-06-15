@@ -8,7 +8,9 @@ namespace Tests\Feature\Http\Controller\Admin;
 
 use App\Exceptions\Errors;
 use App\Models\Administrator;
+use App\Models\AdminPermission;
 use App\Models\AdminRole;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\ActingAsAdministrator;
@@ -22,7 +24,7 @@ class AdministratorControllerTest extends TestCase
     public function testIndex()
     {
         /** @var Administrator $admin1 */
-        $admin1 = Administrator::factory()->create(['username' => 'admin1']);
+        $admin1 = Administrator::factory()->create(['username' => 'admin1', 'super' => true]);
 
         /** @var Administrator $admin2 */
         $admin2 = Administrator::factory()->create(['username' => 'admin2']);
@@ -53,6 +55,7 @@ class AdministratorControllerTest extends TestCase
         $this->actingAs($admin1)
             ->getJson('api/admin/administrators')
             ->assertJsonCount(4, 'data')
+            ->assertJsonCount(1, 'data.0.roles')
             ->assertOk();
 
         $this->actingAs($admin1)
@@ -157,16 +160,115 @@ class AdministratorControllerTest extends TestCase
         $admin2 = Administrator::factory()->create(['username' => 'admin2', 'super' => true]);
 
         $this->actingAsSuperAdministrator()
-            ->deleteJson('api/admin/administrators/'. $admin2['id'])
+            ->deleteJson('api/admin/administrators/' . $admin2['id'])
             ->assertJsonPath('code', Errors::Forbidden())
             ->assertOk();
 
         $this->actingAsSuperAdministrator()
-            ->deleteJson('api/admin/administrators/'. $admin1['id'])
+            ->deleteJson('api/admin/administrators/' . $admin1['id'])
             ->assertJsonPath('code', 0)
             ->assertOk();
 
         $this->assertModelMissing($admin1);
         $this->assertModelExists($admin2);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testPermit()
+    {
+        AdminPermission::create(['name' => 'permission1']);
+        AdminPermission::create(['name' => 'permission2']);
+        AdminPermission::create(['name' => 'permission3']);
+        AdminPermission::create(['name' => 'permission4']);
+
+        /** @var Administrator $admin */
+        $admin = Administrator::factory()->create();
+
+        self::assertFalse($admin->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/permit', ['permissions' => 'permission1'])
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllPermissions(['permission1']));
+        self::assertFalse($admin->hasAnyPermission(['permission2', 'permission3', 'permission4']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/permit', ['permissions' => ['permission1', 'permission3']])
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllPermissions(['permission1', 'permission3']));
+        self::assertFalse($admin->hasAnyPermission(['permission2', 'permission4']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/permit', ['permissions' => ['permission2', 'permission3', 'permission4']])
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllPermissions(['permission2', 'permission3', 'permission4']));
+        self::assertFalse($admin->hasAnyPermission(['permission1']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/permit')
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertFalse($admin->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
+    }
+
+    public function testAssign()
+    {
+        AdminRole::factory()->create(['name' => 'role1']);
+        AdminRole::factory()->create(['name' => 'role2']);
+        AdminRole::factory()->create(['name' => 'role3']);
+        AdminRole::factory()->create(['name' => 'role4']);
+
+        /** @var Administrator $admin */
+        $admin = Administrator::factory()->create();
+
+        self::assertFalse($admin->hasAnyRole(['role1', 'role2', 'role3', 'role4']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/assign', ['roles' => 'role1'])
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllRoles(['role1']));
+        self::assertFalse($admin->hasAnyRole(['role2', 'role3', 'role4']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/assign', ['roles' => ['role1', 'role3']])
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllRoles(['role1', 'role3']));
+        self::assertFalse($admin->hasAnyRole(['role2', 'role4']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/assign', ['roles' => ['role2', 'role3']])
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertTrue($admin->hasAllRoles(['role2', 'role3']));
+        self::assertFalse($admin->hasAnyRole(['role1', 'role4']));
+
+        $this->actingAsSuperAdministrator()
+            ->putJson('api/admin/administrators/' . $admin['id'] . '/assign')
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertFalse($admin->hasAnyRole(['role1', 'role2', 'role3', 'role4']));
     }
 }
