@@ -4,9 +4,14 @@ namespace App\Models;
 
 use App\Support\Model\UserModel;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Spatie\Permission\Traits\HasRoles;
 
 class Administrator extends UserModel
 {
+    use HasRoles;
+
+    protected string $guard_name = 'sanctum';
+
     protected $fillable = [
         'username',
         'name',
