@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
+/**
+ * @title 管理员管理
+ */
 class AdministratorController extends Controller
 {
     /**
@@ -50,8 +53,8 @@ class AdministratorController extends Controller
     {
         $request->validate([
             'password' => 'required',
-            'username' => 'unique:administrators',
-            'name' => 'unique:administrators',
+            'username' => 'unique:' . $administrator->getTable(),
+            'name' => 'unique:' . $administrator->getTable(),
         ], [], $request->attributes());
 
         return $administrator->sanitizeFill($request)->save()

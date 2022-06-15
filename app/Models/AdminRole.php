@@ -13,6 +13,7 @@ class AdminRole extends Role
 
     protected $fillable = [
         'name',
+        'guard_name',
         'description',
         'sort',
         'status',

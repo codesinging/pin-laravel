@@ -18,7 +18,7 @@ class AdminRoleFactory extends Factory
     {
         return [
             'guard_name' => 'sanctum',
-            'name' => $this->faker->title,
+            'name' => $this->faker->unique()->title,
             'description' => $this->faker->text(50),
             'sort' => $this->faker->numberBetween(10000, 9999),
             'status' => true,
