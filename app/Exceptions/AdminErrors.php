@@ -9,6 +9,8 @@ namespace App\Exceptions;
 use ArchTech\Enums\InvokableCases;
 
 /**
+ * 后台管理错误
+ *
  * @method static int Error()
  */
 enum AdminErrors: int implements ErrorLabel

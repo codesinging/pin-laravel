@@ -17,8 +17,8 @@ class AdministratorFactory extends Factory
     public function definition()
     {
         return [
-            'username' => $this->faker->userName(),
-            'name' => $this->faker->name,
+            'username' => $this->faker->unique()->userName(),
+            'name' => $this->faker->unique()->name,
             'password' => $this->faker->password,
             'status' => $this->faker->boolean,
         ];

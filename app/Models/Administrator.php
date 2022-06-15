@@ -3,10 +3,17 @@
 namespace App\Models;
 
 use App\Support\Model\UserModel;
+use App\Support\Permission\IsSuper;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Collection;
+use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class Administrator extends UserModel
+/**
+ * @method static Builder role(string|int|array|Role|Collection $roles, string $guard = null)
+ */
+class Administrator extends UserModel implements IsSuper
 {
     use HasRoles;
 
@@ -16,6 +23,7 @@ class Administrator extends UserModel
         'username',
         'name',
         'password',
+        'super',
         'status',
     ];
 
@@ -24,6 +32,7 @@ class Administrator extends UserModel
     ];
 
     protected $casts = [
+        'super' => 'boolean',
         'status' => 'boolean',
     ];
 
@@ -34,5 +43,15 @@ class Administrator extends UserModel
     protected function password(): Attribute
     {
         return new Attribute(set: fn($value) => bcrypt($value));
+    }
+
+    /**
+     * 是否超级管理员
+     *
+     * @return boolean
+     */
+    public function isSuper(): bool
+    {
+        return (bool)$this->attributes['super'];
     }
 }

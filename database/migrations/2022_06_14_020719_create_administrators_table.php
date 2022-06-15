@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('username')->unique()->comment('登录用户名');
             $table->string('name')->unique()->comment('管理员名称');
             $table->string('password')->comment('登录密码');
+            $table->boolean('super')->default(false)->comment('是否超级管理员');
             $table->boolean('status')->default(true)->comment('状态');
 
             $table->timestamps();
