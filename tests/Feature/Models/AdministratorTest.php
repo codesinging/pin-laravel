@@ -7,6 +7,7 @@
 namespace Tests\Feature\Models;
 
 use App\Models\Administrator;
+use App\Models\AdminRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -49,5 +50,26 @@ class AdministratorTest extends TestCase
         $admin->save();
 
         self::assertTrue(Hash::check('admin.444', $admin['password']));
+    }
+
+    public function testRelationOfRoles()
+    {
+        /** @var Administrator $admin */
+        $admin = Administrator::factory()->create();
+
+        $role1 = AdminRole::factory()->create(['name' => 'role1']);
+        $role2 = AdminRole::factory()->create(['name' => 'role2']);
+
+        $admin->assignRole([$role1, $role2]);
+
+        self::assertArrayHasKey('roles', $admin->toArray());
+        self::assertCount(2, $admin['roles']);
+        self::assertEquals('role1', $admin['roles'][0]['name']);
+
+        $admins = Administrator::all()->toArray();
+
+        self::assertArrayHasKey('roles', $admins[0]);
+        self::assertCount(2, $admins[0]['roles']);
+        self::assertEquals('role1', $admins[0]['roles'][0]['name']);
     }
 }

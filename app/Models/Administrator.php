@@ -27,6 +27,10 @@ class Administrator extends UserModel
         'status' => 'boolean',
     ];
 
+    protected $with = [
+        'roles',
+    ];
+
     protected function password(): Attribute
     {
         return new Attribute(set: fn($value) => bcrypt($value));
