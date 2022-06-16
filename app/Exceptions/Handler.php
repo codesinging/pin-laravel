@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,5 +48,27 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * @param $request
+     * @param Throwable $e
+     *
+     * @return Response|JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e): Response|JsonResponse|\Symfony\Component\HttpFoundation\Response
+    {
+        if ($request->expectsJson()){
+            if ($e instanceof ApiException){
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'errors' => $e->getTrace(),
+                ], 200);
+            }
+        }
+
+        return parent::render($request, $e);
     }
 }

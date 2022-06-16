@@ -11,7 +11,7 @@ use Throwable;
 /**
  * 通用异常类
  */
-class Exception extends \Exception
+class Exception extends ApiException
 {
     public function __construct(string|Errors $message = "", int $code = 1, ?Throwable $previous = null)
     {
