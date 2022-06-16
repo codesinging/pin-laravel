@@ -24,4 +24,5 @@ Route::middleware(['auth:sanctum'])
         Route::put('admin_roles/{admin_role}/permit', [Admin\AdminRoleController::class, 'permit']);
         Route::apiResource('admin_roles', Admin\AdminRoleController::class);
 
+        Route::apiResource('admin_pages', Admin\AdminPageController::class);
     });
