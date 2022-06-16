@@ -20,6 +20,13 @@ return new class extends Migration
                 $table->boolean('status')->default(true)->comment('角色状态');
             });
         });
+
+        Schema::table(config('permission.table_names.permissions'), function (Blueprint $table){
+            $table->after('guard_name', function (Blueprint $table){
+                $table->unsignedBigInteger('permissionable_id')->nullable()->comment('关联模型ID');
+                $table->string('permissionable_type')->nullable()->comment('关联模型类型');
+            });
+        });
     }
 
     /**
@@ -31,6 +38,10 @@ return new class extends Migration
     {
         Schema::table(config('permission.table_names.roles'), function (Blueprint $table){
             $table->dropColumn(['description', 'sort', 'status']);
+        });
+
+        Schema::table(config('permission.table_names.permissions'), function (Blueprint $table){
+            $table->dropColumn(['permissionable_id', 'permissionable_type']);
         });
     }
 };

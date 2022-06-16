@@ -6,9 +6,22 @@
 
 namespace App\Models;
 
+use App\Support\Model\BaseModel;
+use App\Support\Model\ModelTraits;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\Permission\Models\Permission;
 
+/**
+ * @property BaseModel $permissionable
+ */
 class AdminPermission extends Permission
 {
-    protected string $guard_name = 'sanctum';
+    use ModelTraits;
+
+    public string $guard_name = 'sanctum';
+
+    public function permissionable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }
