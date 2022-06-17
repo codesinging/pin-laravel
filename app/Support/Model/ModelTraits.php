@@ -19,8 +19,6 @@ trait ModelTraits
 {
     use HasFactory;
 
-    use HasShortflakePrimary;
-
     use Instance;
     use SerializeDate;
     use Lister;
