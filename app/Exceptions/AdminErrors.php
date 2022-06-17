@@ -23,6 +23,8 @@ enum AdminErrors: int implements ErrorLabel
     case AuthNotMatched = 900101;
     case AuthInvalidStatus = 900102;
 
+    case NoPermission = 900200;
+
     public function label(): string
     {
         return match ($this) {
@@ -30,6 +32,8 @@ enum AdminErrors: int implements ErrorLabel
             self::AuthUserNotFound => '登录用户不存在',
             self::AuthNotMatched => '账号和密码不匹配',
             self::AuthInvalidStatus => '账号状态异常',
+
+            self::NoPermission => '无访问权限',
         };
     }
 }

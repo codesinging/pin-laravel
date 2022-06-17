@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
+use App\Support\Permission\SuperUserGate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
+    use SuperUserGate;
+
     /**
      * The model to policy mappings for the application.
      *
@@ -25,6 +28,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        $this->superUserGate();
     }
 }

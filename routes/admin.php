@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin;
 
 Route::put('auth/login', [Admin\AuthController::class, 'login']);
 
-Route::middleware(['auth:sanctum'])
+Route::middleware(['auth:sanctum', 'admin.permission'])
     ->group(function () {
 
         Route::put('auth/logout', [Admin\AuthController::class, 'logout']);
