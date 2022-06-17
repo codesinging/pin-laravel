@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin;
 Route::put('auth/login', [Admin\AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])
-    ->group(function (){
+    ->group(function () {
 
         Route::put('auth/logout', [Admin\AuthController::class, 'logout']);
         Route::get('auth/user', [Admin\AuthController::class, 'user']);
@@ -27,4 +27,8 @@ Route::middleware(['auth:sanctum'])
         Route::apiResource('admin_pages', Admin\AdminPageController::class);
 
         Route::apiResource('admin_menus', Admin\AdminMenuController::class);
+
+        Route::put('admin_actions/sync', [Admin\AdminActionController::class, 'sync']);
+        Route::apiResource('admin_actions', Admin\AdminActionController::class)->only('index', 'show', 'destroy');
+
     });
