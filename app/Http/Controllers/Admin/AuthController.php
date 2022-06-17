@@ -7,7 +7,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\AdminErrors;
-use App\Models\Administrator;
+use App\Models\AdminUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -31,8 +31,8 @@ class AuthController extends Controller
             'password' => '登录密码',
         ]);
 
-        /** @var Administrator $admin */
-        $admin = Administrator::wheres('username', $request->input('username'))->first();
+        /** @var AdminUser $admin */
+        $admin = AdminUser::wheres('username', $request->input('username'))->first();
 
         if (empty($admin)) {
             return error(AdminErrors::AuthUserNotFound);
@@ -60,7 +60,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        /** @var Administrator $admin */
+        /** @var AdminUser $admin */
         $admin = $request->user();
 
         $admin->tokens()->where('tokenable_id', $admin['id'])->delete();
@@ -89,7 +89,7 @@ class AuthController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        /** @var Administrator $admin */
+        /** @var AdminUser $admin */
         $admin = $request->user();
 
         $admin->update($admin->sanitize($request));
@@ -114,7 +114,7 @@ class AuthController extends Controller
             'password' => '新密码',
         ]);
 
-        /** @var Administrator $admin */
+        /** @var AdminUser $admin */
         $admin = $request->user();
 
         return $admin->update(['password' => $request->input('password')])

@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
 
+/**
+ * @title 后台页面管理
+ */
 class AdminPageController extends Controller
 {
     /**

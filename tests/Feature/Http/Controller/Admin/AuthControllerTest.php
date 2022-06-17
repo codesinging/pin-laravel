@@ -7,7 +7,7 @@
 namespace Tests\Feature\Http\Controller\Admin;
 
 use App\Exceptions\AdminErrors;
-use App\Models\Administrator;
+use App\Models\AdminUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -28,7 +28,7 @@ class AuthControllerTest extends TestCase
             ->assertJsonPath('message', AdminErrors::AuthUserNotFound->label())
             ->assertOk();
 
-        $admin = Administrator::factory()->create([
+        $admin = AdminUser::factory()->create([
             'username' => 'admin',
             'password' => 'admin.123',
             'status' => false,
@@ -55,14 +55,14 @@ class AuthControllerTest extends TestCase
 
     public function testLogout()
     {
-        $admin = Administrator::factory()->create(['password' => 'admin.123', 'status' => true]);
+        $admin = AdminUser::factory()->create(['password' => 'admin.123', 'status' => true]);
 
         $this->putJson('api/admin/auth/login', ['username' => $admin['username'], 'password' => 'admin.123'])
             ->assertOk();
 
         Auth::login($admin);
 
-        /** @var Administrator $user */
+        /** @var AdminUser $user */
         $user = Auth::user();
 
         self::assertEquals(1, $user->tokens()->get()->count());
@@ -76,7 +76,7 @@ class AuthControllerTest extends TestCase
 
     public function testUser()
     {
-        $admin = Administrator::factory()->create();
+        $admin = AdminUser::factory()->create();
 
         $this->actingAs($admin)
             ->getJson('api/admin/auth/user')
@@ -86,7 +86,7 @@ class AuthControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $admin = Administrator::factory()->create(['password' => 'admin.123', 'status' => true]);
+        $admin = AdminUser::factory()->create(['password' => 'admin.123', 'status' => true]);
 
         $this->actingAs($admin)
             ->putJson('api/admin/auth/update', ['name' => 'test_name'])
@@ -100,7 +100,7 @@ class AuthControllerTest extends TestCase
 
     public function testPassword()
     {
-        $admin = Administrator::factory()->create(['password' => 'admin.123', 'status' => true]);
+        $admin = AdminUser::factory()->create(['password' => 'admin.123', 'status' => true]);
 
         $this->actingAs($admin)
             ->putJson('api/admin/auth/password')

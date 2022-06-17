@@ -9,19 +9,19 @@ namespace Tests\Feature\Http\Controller\Admin;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\ActingAsAdministrator;
+use Tests\ActingAsAdminUser;
 use Tests\TestCase;
 
 class AdminRoleControllerTest extends TestCase
 {
     use RefreshDatabase;
-    use ActingAsAdministrator;
+    use ActingAsAdminUser;
 
     public function testIndex()
     {
         AdminRole::factory()->count(5)->create();
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_roles')
             ->assertJsonPath('code', 0)
             ->assertJsonCount(5, 'data')
@@ -30,17 +30,17 @@ class AdminRoleControllerTest extends TestCase
 
     public function testStore()
     {
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->postJson('api/admin/admin_roles')
             ->assertJsonStructure(['errors' => ['name']])
             ->assertStatus(422);
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->postJson('api/admin/admin_roles', ['name' => 'role'])
             ->assertJsonPath('data.name', 'role')
             ->assertOk();
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->postJson('api/admin/admin_roles', ['name' => 'role'])
             ->assertJsonStructure(['errors' => ['name']])
             ->assertStatus(422);
@@ -51,17 +51,17 @@ class AdminRoleControllerTest extends TestCase
         $role1 = AdminRole::factory()->create(['name' => 'role1']);
         $role2 = AdminRole::factory()->create(['name' => 'role2']);
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_roles/' . $role1['id'], ['name' => 'role2'])
             ->assertJsonStructure(['errors' => ['name']])
             ->assertStatus(422);
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_roles/' . $role2['id'], ['name' => 'role1'])
             ->assertJsonStructure(['errors' => ['name']])
             ->assertStatus(422);
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_roles/' . $role1['id'], ['name' => 'role3'])
             ->assertJsonPath('data.name', 'role3')
             ->assertOk();
@@ -71,7 +71,7 @@ class AdminRoleControllerTest extends TestCase
     {
         $role = AdminRole::factory()->create();
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_roles/' . $role['id'])
             ->assertJsonPath('data.id', $role['id'])
             ->assertOk();
@@ -81,7 +81,7 @@ class AdminRoleControllerTest extends TestCase
     {
         $role = AdminRole::factory()->create();
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->deleteJson('api/admin/admin_roles/' . $role['id'])
             ->assertOk();
 
@@ -99,7 +99,7 @@ class AdminRoleControllerTest extends TestCase
 
         self::assertFalse($role->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_roles/' . $role['id'] . '/permit', ['permissions' => 'permission1'])
             ->assertOk();
 
@@ -108,7 +108,7 @@ class AdminRoleControllerTest extends TestCase
         self::assertTrue($role->hasAllPermissions(['permission1']));
         self::assertFalse($role->hasAnyPermission(['permission2', 'permission3', 'permission4']));
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_roles/' . $role['id'] . '/permit', ['permissions' => ['permission1', 'permission2']])
             ->assertOk();
 
@@ -117,7 +117,7 @@ class AdminRoleControllerTest extends TestCase
         self::assertTrue($role->hasAllPermissions(['permission1', 'permission2']));
         self::assertFalse($role->hasAnyPermission(['permission3', 'permission4']));
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_roles/' . $role['id'] . '/permit', ['permissions' => ['permission2', 'permission3']])
             ->assertOk();
 
@@ -126,7 +126,7 @@ class AdminRoleControllerTest extends TestCase
         self::assertTrue($role->hasAllPermissions(['permission2', 'permission3']));
         self::assertFalse($role->hasAnyPermission(['permission1', 'permission4']));
 
-        $this->actingAsSuperAdministrator()
+        $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_roles/' . $role['id'] . '/permit')
             ->assertOk();
 
