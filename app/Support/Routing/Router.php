@@ -14,7 +14,6 @@ class Router
 {
     protected Route $route;
 
-    protected ?string $class;
     protected ?string $controller;
     protected ?string $action;
 
@@ -26,8 +25,7 @@ class Router
 
     private function parseRoute(): void
     {
-        list($this->class, $this->action) = explode('@', $this->route->getActionName());
-        $this->controller = str($this->class)->after('App\\Http\\Controllers\\')->replace('\\', '/');
+        list($this->controller, $this->action) = explode('@', $this->route->getActionName());
     }
 
     /**
@@ -42,16 +40,6 @@ class Router
         $routes = collect(RouteFacade::getRoutes()->getRoutes());
 
         return $prefix ? $routes->filter(fn(Route $route) => $route->getPrefix() === $prefix) : $routes;
-    }
-
-    /**
-     * 返回路由的类名
-     *
-     * @return string|null
-     */
-    public function class(): ?string
-    {
-        return $this->class;
     }
 
     /**

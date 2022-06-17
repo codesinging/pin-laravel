@@ -16,7 +16,7 @@ class RouterTest extends TestCase
 {
     protected string $routeAction = AuthController::class . '@login';
 
-    protected string $routeClass = AuthController::class;
+    protected string $routeController = AuthController::class;
 
     public function testRoutes()
     {
@@ -27,18 +27,11 @@ class RouterTest extends TestCase
         $routes->each(fn(Route $route) => self::assertEquals('api/admin', $route->getPrefix()));
     }
 
-    public function testClass()
-    {
-        $router = new Router($this->routeAction);
-
-        self::assertEquals($this->routeClass, $router->class());
-    }
-
     public function testController()
     {
         $router = new Router($this->routeAction);
 
-        self::assertEquals('Admin/AuthController', $router->controller());
+        self::assertEquals($this->routeController, $router->controller());
     }
 
     public function testAction()
