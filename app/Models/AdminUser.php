@@ -13,7 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @method static Builder role(string|int|array|Role|Collection $roles, string $guard = null)
  */
-class Administrator extends UserModel implements IsSuper
+class AdminUser extends UserModel implements IsSuper
 {
     use HasRoles;
 

@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Administrator;
+use App\Models\AdminUser;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class AdministratorSeeder extends Seeder
+class AdminUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,13 +15,13 @@ class AdministratorSeeder extends Seeder
      */
     public function run()
     {
-        Administrator::creates([
+        AdminUser::creates([
             'username' => 'admin',
             'name' => 'Admin',
             'password' => 'admin.123',
             'status' => true,
         ]);
 
-        Administrator::factory()->count(5)->create();
+        AdminUser::factory()->count(5)->create();
     }
 }
