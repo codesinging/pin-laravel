@@ -178,15 +178,16 @@ class AdminUserControllerTest extends TestCase
      */
     public function testPermit()
     {
-        AdminPermission::create(['name' => 'permission1']);
-        AdminPermission::create(['name' => 'permission2']);
-        AdminPermission::create(['name' => 'permission3']);
-        AdminPermission::create(['name' => 'permission4']);
+        $permission1 = AdminPermission::create(['name' => 'permission1']);
+        $permission2 = AdminPermission::create(['name' => 'permission2']);
+        $permission3 = AdminPermission::create(['name' => 'permission3']);
+        $permission4 = AdminPermission::create(['name' => 'permission4']);
 
         /** @var AdminUser $admin */
         $admin = AdminUser::factory()->create();
 
         self::assertFalse($admin->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
+        self::assertFalse($admin->hasAnyPermission([$permission1['id'], $permission2['id'], $permission3['id'], $permission4['id']]));
 
         $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_users/' . $admin['id'] . '/permit', ['permissions' => 'permission1'])
@@ -195,7 +196,9 @@ class AdminUserControllerTest extends TestCase
         $admin->refresh();
 
         self::assertTrue($admin->hasAllPermissions(['permission1']));
+        self::assertTrue($admin->hasAllPermissions([$permission1['id']]));
         self::assertFalse($admin->hasAnyPermission(['permission2', 'permission3', 'permission4']));
+        self::assertFalse($admin->hasAnyPermission([$permission2['id'], $permission3['id'], $permission4['id']]));
 
         $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_users/' . $admin['id'] . '/permit', ['permissions' => ['permission1', 'permission3']])
@@ -207,13 +210,15 @@ class AdminUserControllerTest extends TestCase
         self::assertFalse($admin->hasAnyPermission(['permission2', 'permission4']));
 
         $this->actingAsSuperAdminUser()
-            ->putJson('api/admin/admin_users/' . $admin['id'] . '/permit', ['permissions' => ['permission2', 'permission3', 'permission4']])
+            ->putJson('api/admin/admin_users/' . $admin['id'] . '/permit', ['permissions' => [$permission2['id'], $permission3['id'], $permission4['id']]])
             ->assertOk();
 
         $admin->refresh();
 
         self::assertTrue($admin->hasAllPermissions(['permission2', 'permission3', 'permission4']));
+        self::assertTrue($admin->hasAllPermissions([$permission2['id'], $permission3['id'], $permission4['id']]));
         self::assertFalse($admin->hasAnyPermission(['permission1']));
+        self::assertFalse($admin->hasAnyPermission([$permission1['id']]));
 
         $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_users/' . $admin['id'] . '/permit')
@@ -226,15 +231,16 @@ class AdminUserControllerTest extends TestCase
 
     public function testAssign()
     {
-        AdminRole::factory()->create(['name' => 'role1']);
-        AdminRole::factory()->create(['name' => 'role2']);
-        AdminRole::factory()->create(['name' => 'role3']);
-        AdminRole::factory()->create(['name' => 'role4']);
+        $role1 = AdminRole::factory()->create(['name' => 'role1']);
+        $role2 = AdminRole::factory()->create(['name' => 'role2']);
+        $role3 = AdminRole::factory()->create(['name' => 'role3']);
+        $role4 = AdminRole::factory()->create(['name' => 'role4']);
 
         /** @var AdminUser $admin */
         $admin = AdminUser::factory()->create();
 
         self::assertFalse($admin->hasAnyRole(['role1', 'role2', 'role3', 'role4']));
+        self::assertFalse($admin->hasAnyRole([$role1['id'], $role2['id'], $role3['id'], $role4['id']]));
 
         $this->actingAsSuperAdminUser()
             ->putJson('api/admin/admin_users/' . $admin['id'] . '/assign', ['roles' => 'role1'])
@@ -255,7 +261,7 @@ class AdminUserControllerTest extends TestCase
         self::assertFalse($admin->hasAnyRole(['role2', 'role4']));
 
         $this->actingAsSuperAdminUser()
-            ->putJson('api/admin/admin_users/' . $admin['id'] . '/assign', ['roles' => ['role2', 'role3']])
+            ->putJson('api/admin/admin_users/' . $admin['id'] . '/assign', ['roles' => [$role2['id'], $role3['id']]])
             ->assertOk();
 
         $admin->refresh();
