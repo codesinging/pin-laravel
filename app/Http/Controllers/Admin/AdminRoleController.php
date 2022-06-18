@@ -15,7 +15,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 
 /**
- * 管理员角色管理
+ * @title 管理员角色管理
  */
 class AdminRoleController extends Controller
 {
