@@ -20,6 +20,7 @@ class AdminUserFactory extends Factory
             'username' => $this->faker->unique()->userName(),
             'name' => $this->faker->unique()->name,
             'password' => $this->faker->password,
+            'super' => false,
             'status' => $this->faker->boolean,
         ];
     }

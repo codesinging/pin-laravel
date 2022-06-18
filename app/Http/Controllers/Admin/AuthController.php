@@ -7,7 +7,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\AdminErrors;
+use App\Models\AdminMenu;
+use App\Models\AdminPage;
 use App\Models\AdminUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -120,5 +123,47 @@ class AuthController extends Controller
         return $admin->update(['password' => $request->input('password')])
             ? success('修改密码成功')
             : error('修改密码失败');
+    }
+
+    /**
+     * 获取登录用户拥有权限的页面列表
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function pages(Request $request): JsonResponse
+    {
+        /** @var AdminUser $user */
+        $user = $request->user();
+
+        if ($user->isSuper()) {
+            $pages = AdminPage::wheres('status', true)->get();
+        } else {
+            $pages = $user->permissionables(AdminPage::class, fn(Builder $builder) => $builder->where('status', true));
+        }
+
+        return success('获取页面列表成功', $pages);
+    }
+
+    /**
+     * 获取登录用户拥有权限的菜单列表
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function menus(Request $request): JsonResponse
+    {
+        /** @var AdminUser $user */
+        $user = $request->user();
+
+        if ($user->isSuper()) {
+            $menus = AdminMenu::wheres('status', true)->get();
+        } else {
+            $menus = $user->permissionables(AdminMenu::class, fn(Builder $builder) => $builder->where('status', true));
+        }
+
+        return success('获取菜单列表成功', $menus);
     }
 }

@@ -7,6 +7,8 @@
 namespace Tests\Feature\Http\Controller\Admin;
 
 use App\Exceptions\AdminErrors;
+use App\Models\AdminMenu;
+use App\Models\AdminPage;
 use App\Models\AdminUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -134,5 +136,99 @@ class AuthControllerTest extends TestCase
         $admin->refresh();
 
         self::assertTrue(Hash::check('123', $admin['password']));
+    }
+
+    public function testPages()
+    {
+        /** @var AdminUser $user1 */
+        $user1 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user2 */
+        $user2 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user3 */
+        $user3 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user4 */
+        $user4 = AdminUser::factory()->create(['super' => true]);
+
+        /** @var AdminPage $page1 */
+        $page1 = AdminPage::factory()->create();
+
+        /** @var AdminPage $page2 */
+        $page2 = AdminPage::factory()->create();
+
+        /** @var AdminPage $page3 */
+        $page3 = AdminPage::factory()->create();
+
+        $user1->givePermissionTo($page1->permission);
+        $user2->givePermissionTo($page1->permission, $page2->permission);
+
+        $this->actingAs($user1)
+            ->getJson('api/admin/auth/pages')
+            ->assertJsonCount(1, 'data')
+            ->assertOk();
+
+        $this->actingAs($user2)
+            ->getJson('api/admin/auth/pages')
+            ->assertJsonCount(2, 'data')
+            ->assertOk();
+
+        $this->actingAs($user3)
+            ->getJson('api/admin/auth/pages')
+            ->assertJsonCount(0, 'data')
+            ->assertOk();
+
+        $this->actingAs($user4)
+            ->getJson('api/admin/auth/pages')
+            ->assertJsonCount(3, 'data')
+            ->assertOk();
+    }
+
+    public function testMenus()
+    {
+        /** @var AdminUser $user1 */
+        $user1 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user2 */
+        $user2 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user3 */
+        $user3 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user4 */
+        $user4 = AdminUser::factory()->create(['super' => true]);
+
+        /** @var AdminMenu $menu1 */
+        $menu1 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu2 */
+        $menu2 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu3 */
+        $menu3 = AdminMenu::factory()->create();
+
+        $user1->givePermissionTo($menu1->permission);
+        $user2->givePermissionTo($menu1->permission, $menu2->permission);
+
+        $this->actingAs($user1)
+            ->getJson('api/admin/auth/menus')
+            ->assertJsonCount(1, 'data')
+            ->assertOk();
+
+        $this->actingAs($user2)
+            ->getJson('api/admin/auth/menus')
+            ->assertJsonCount(2, 'data')
+            ->assertOk();
+
+        $this->actingAs($user3)
+            ->getJson('api/admin/auth/menus')
+            ->assertJsonCount(0, 'data')
+            ->assertOk();
+
+        $this->actingAs($user4)
+            ->getJson('api/admin/auth/menus')
+            ->assertJsonCount(3, 'data')
+            ->assertOk();
     }
 }

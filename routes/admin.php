@@ -16,6 +16,8 @@ Route::middleware(['auth:sanctum', 'admin.permission'])
         Route::get('auth/user', [Admin\AuthController::class, 'user']);
         Route::put('auth/update', [Admin\AuthController::class, 'update']);
         Route::put('auth/password', [Admin\AuthController::class, 'password']);
+        Route::get('auth/pages', [Admin\AuthController::class, 'pages']);
+        Route::get('auth/menus', [Admin\AuthController::class, 'menus']);
 
         Route::put('admin_users/{admin_user}/permit', [Admin\AdminUserController::class, 'permit']);
         Route::put('admin_users/{admin_user}/assign', [Admin\AdminUserController::class, 'assign']);
