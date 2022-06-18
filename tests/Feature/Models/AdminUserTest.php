@@ -6,6 +6,8 @@
 
 namespace Tests\Feature\Models;
 
+use App\Models\AdminMenu;
+use App\Models\AdminPage;
 use App\Models\AdminUser;
 use App\Models\AdminRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -71,5 +73,62 @@ class AdminUserTest extends TestCase
         self::assertArrayHasKey('roles', $admins[0]);
         self::assertCount(2, $admins[0]['roles']);
         self::assertEquals('role1', $admins[0]['roles'][0]['name']);
+    }
+
+    public function testPermissionables()
+    {
+        /** @var AdminUser $user1 */
+        $user1 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user2 */
+        $user2 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user3 */
+        $user3 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user4 */
+        $user4 = AdminUser::factory()->create();
+
+        /** @var AdminPage $page1 */
+        $page1 = AdminPage::factory()->create();
+
+        /** @var AdminPage $page2 */
+        $page2 = AdminPage::factory()->create();
+
+        /** @var AdminMenu $menu1 */
+        $menu1 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu2 */
+        $menu2 = AdminMenu::factory()->create();
+
+        $user1->givePermissionTo($page1->permission, $menu1->permission);
+        $user2->givePermissionTo($menu1->permission, $menu2->permission);
+        $user3->givePermissionTo($page1->permission, $page2->permission, $menu1->permission);
+
+        self::assertCount(2, $user1->permissionables());
+        self::assertCount(1, $user1->permissionables(AdminPage::class));
+        self::assertCount(1, $user1->permissionables(AdminMenu::class));
+
+        self::assertEquals($page1['id'], $user1->permissionables(AdminPage::class)[0]['id']);
+        self::assertEquals($page1['name'], $user1->permissionables(AdminPage::class)[0]['name']);
+        self::assertEquals($menu1['id'], $user1->permissionables(AdminMenu::class)[0]['id']);
+        self::assertEquals($menu1['name'], $user1->permissionables(AdminMenu::class)[0]['name']);
+
+        self::assertCount(2, $user2->permissionables());
+        self::assertCount(0, $user2->permissionables(AdminPage::class));
+        self::assertCount(2, $user2->permissionables(AdminMenu::class));
+
+        self::assertEquals($menu1['id'], $user2->permissionables(AdminMenu::class)[0]['id']);
+        self::assertEquals($menu1['name'], $user2->permissionables(AdminMenu::class)[0]['name']);
+        self::assertEquals($menu2['id'], $user2->permissionables(AdminMenu::class)[1]['id']);
+        self::assertEquals($menu2['name'], $user2->permissionables(AdminMenu::class)[1]['name']);
+
+        self::assertCount(3, $user3->permissionables());
+        self::assertCount(2, $user3->permissionables(AdminPage::class));
+        self::assertCount(1, $user3->permissionables(AdminMenu::class));
+
+        self::assertCount(0, $user4->permissionables());
+        self::assertCount(0, $user4->permissionables(AdminPage::class));
+        self::assertCount(0, $user4->permissionables(AdminMenu::class));
     }
 }
