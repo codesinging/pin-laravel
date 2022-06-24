@@ -29,6 +29,11 @@ class AdminMenu extends BaseModel
         'status',
     ];
 
+    protected $hidden = [
+        '_lft',
+        '_rgt',
+    ];
+
     protected $casts = [
         'default' => 'boolean',
         'opened' => 'boolean',
