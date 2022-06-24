@@ -41,7 +41,6 @@ class AdminMenu extends BaseModel
     ];
 
     protected $with = [
-        'permission',
         'page',
     ];
 

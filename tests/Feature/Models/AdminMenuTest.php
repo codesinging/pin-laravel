@@ -34,7 +34,7 @@ class AdminMenuTest extends TestCase
 
         AdminMenu::factory()->create(['page_id' => $page['id']]);
 
-        $menu = AdminMenu::firsts();
+        $menu = AdminMenu::instance()->with('permission')->first();
 
         self::assertArrayHasKey('permission', $menu->toArray());
 

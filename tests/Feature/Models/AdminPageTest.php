@@ -28,7 +28,7 @@ class AdminPageTest extends TestCase
     {
         AdminPage::factory()->create();
 
-        $page = AdminPage::firsts();
+        $page = AdminPage::instance()->with('permission')->first();
 
         self::assertArrayHasKey('permission', $page->toArray());
 

@@ -33,6 +33,7 @@ class AdminUser extends UserModel implements IsSuper
 
     protected $hidden = [
         'password',
+        'super',
     ];
 
     protected $casts = [

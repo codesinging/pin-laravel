@@ -30,10 +30,6 @@ class AdminPage extends BaseModel
         'deleted' => AdminPageDeleted::class,
     ];
 
-    protected $with = [
-        'permission',
-    ];
-
     public function permission(): MorphOne
     {
         return $this->morphOne(AdminPermission::class, 'permissionable');
