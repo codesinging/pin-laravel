@@ -24,7 +24,7 @@ class AdminMenuSeeder extends Seeder
     {
         return [
             ['name' => '首页', 'page_id' => $this->pageId('/home'), 'icon' => 'bi-house', 'default' => true, 'sort' => 9],
-            ['name' => '系统管理', 'icon' => 'bi-command', 'opened' => false, 'sort' => 3, 'children' => [
+            ['name' => '系统管理', 'icon' => 'bi-command', 'opened' => true, 'sort' => 3, 'children' => [
                 ['name' => '页面管理', 'page_id' => $this->pageId('/admin_pages'), 'icon' => 'bi-file-earmark-text', 'sort' => 99],
                 ['name' => '菜单管理', 'page_id' => $this->pageId('/admin_menus'), 'icon' => 'bi-list', 'sort' => 98],
                 ['name' => '角色管理', 'page_id' => $this->pageId('/admin_roles'), 'icon' => 'bi-people', 'sort' => 97],
