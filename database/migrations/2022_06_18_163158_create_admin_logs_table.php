@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('path')->nullable()->comment('请求路径');
             $table->ipAddress('ip')->nullable()->comment('请求IP地址');
             $table->json('input')->nullable()->comment('请求参数');
-            $table->integer('status')->nullable()->comment('响应状态码');
-            $table->integer('code')->nullable()->comment('响应内容代码');
+            $table->string('status')->nullable()->comment('响应状态码');
+            $table->string('code')->nullable()->comment('响应内容代码');
             $table->string('message')->nullable()->comment('响应消息');
             $table->json('data')->nullable()->comment('响应数据');
 
