@@ -163,7 +163,9 @@ class AuthController extends Controller
         if ($user->isSuper()) {
             $menus = AdminMenu::wheres('status', true)->get();
         } else {
-            $menus = $user->permissionables(AdminMenu::class, fn(Builder $builder) => $builder->where('status', true));
+            $publicMenus = AdminMenu::wheres('status', true)->where('public', true)->get();
+            $permissionableMenus = $user->permissionables(AdminMenu::class, fn(Builder $builder) => $builder->where('status', true));
+            $menus = $publicMenus->concat($permissionableMenus);
         }
 
         return success('获取菜单列表成功', $menus);

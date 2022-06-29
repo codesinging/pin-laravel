@@ -13,9 +13,11 @@ class AdminMenuCreated
      */
     public function __construct(AdminMenu $adminMenu)
     {
-        $adminMenu->permission()->create([
-            'name' => sprintf('%s:%s', $adminMenu::class, $adminMenu['id']),
-            'guard_name' => $adminMenu->guard_name,
-        ]);
+        if (!$adminMenu->isPublic()){
+            $adminMenu->permission()->create([
+                'name' => sprintf('%s:%s', $adminMenu::class, $adminMenu['id']),
+                'guard_name' => $adminMenu->guard_name,
+            ]);
+        }
     }
 }

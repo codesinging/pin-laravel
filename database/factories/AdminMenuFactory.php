@@ -18,6 +18,7 @@ class AdminMenuFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
+            'public' => false,
         ];
     }
 }

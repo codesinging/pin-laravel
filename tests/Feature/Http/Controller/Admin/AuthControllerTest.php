@@ -214,27 +214,33 @@ class AuthControllerTest extends TestCase
         /** @var AdminMenu $menu3 */
         $menu3 = AdminMenu::factory()->create();
 
+        /** @var AdminMenu $menu4 */
+        $menu4 = AdminMenu::factory()->create(['public' => true]);
+
         $user1->givePermissionTo($menu1->permission);
         $user2->givePermissionTo($menu1->permission, $menu2->permission);
 
         $this->actingAs($user1)
             ->getJson('api/admin/auth/menus')
-            ->assertJsonCount(1, 'data')
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.*.id', [$menu4['id'], $menu1['id']])
             ->assertOk();
 
         $this->actingAs($user2)
             ->getJson('api/admin/auth/menus')
-            ->assertJsonCount(2, 'data')
+            ->assertJsonCount(3, 'data')
+            ->assertJsonPath('data.*.id', [$menu4['id'], $menu1['id'], $menu2['id']])
             ->assertOk();
 
         $this->actingAs($user3)
             ->getJson('api/admin/auth/menus')
-            ->assertJsonCount(0, 'data')
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.*.id', [$menu4['id']])
             ->assertOk();
 
         $this->actingAs($user4)
             ->getJson('api/admin/auth/menus')
-            ->assertJsonCount(3, 'data')
+            ->assertJsonCount(4, 'data')
             ->assertOk();
     }
 }

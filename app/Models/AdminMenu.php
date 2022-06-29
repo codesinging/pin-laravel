@@ -24,6 +24,7 @@ class AdminMenu extends BaseModel
         'name',
         'icon',
         'sort',
+        'public',
         'default',
         'opened',
         'status',
@@ -35,6 +36,7 @@ class AdminMenu extends BaseModel
     ];
 
     protected $casts = [
+        'public' => 'boolean',
         'default' => 'boolean',
         'opened' => 'boolean',
         'status' => 'boolean',
@@ -48,6 +50,11 @@ class AdminMenu extends BaseModel
     protected $with = [
         'page',
     ];
+
+    public function isPublic(): bool
+    {
+        return (bool)($this->attributes['public'] ?? false);
+    }
 
     public function permission(): MorphOne
     {

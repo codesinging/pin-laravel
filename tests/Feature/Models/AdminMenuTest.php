@@ -16,6 +16,18 @@ class AdminMenuTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function testIsPublic()
+    {
+        /** @var AdminMenu $menu1 */
+        $menu1 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu2 */
+        $menu2 = AdminMenu::factory()->create(['public' => true]);
+
+        self::assertFalse($menu1->isPublic());
+        self::assertTrue($menu2->isPublic());
+    }
+
     public function testPermissionAttribute()
     {
         /** @var AdminPage $page */
@@ -44,28 +56,48 @@ class AdminMenuTest extends TestCase
 
     public function testCreatedAndDeletedEvent()
     {
-        /** @var AdminPage $page */
-        $page = AdminPage::factory()->create();
+        /** @var AdminPage $page1 */
+        $page1 = AdminPage::factory()->create();
+        /** @var AdminPage $page2 */
+        $page2 = AdminPage::factory()->create(['public' => true]);
 
-        /** @var AdminMenu $menu */
-        $menu = AdminMenu::factory()->create(['page_id' => $page['id']]);
+        /** @var AdminMenu $menu1 */
+        $menu1 = AdminMenu::factory()->create(['page_id' => $page1['id']]);
 
-        $this->assertModelExists($menu);
+        /** @var AdminMenu $menu2 */
+        $menu2 = AdminMenu::factory()->create(['page_id' => $page2['id'], 'public' => true]);
+
+        $this->assertModelExists($menu1);
+        $this->assertModelExists($menu2);
 
         $this->assertDatabaseHas(AdminPermission::class, [
-            'permissionable_id' => $menu['id'],
-            'permissionable_type' => $menu::class,
-            'guard_name' => $menu->guard_name,
+            'permissionable_id' => $menu1['id'],
+            'permissionable_type' => $menu1::class,
+            'guard_name' => $menu1->guard_name,
         ]);
 
-        $menu->delete();
+        $this->assertDatabaseMissing(AdminPermission::class, [
+            'permissionable_id' => $menu2['id'],
+            'permissionable_type' => $menu2::class,
+            'guard_name' => $menu2->guard_name,
+        ]);
 
-        $this->assertModelMissing($menu);
+        $menu1->delete();
+        $menu2->delete();
+
+        $this->assertModelMissing($menu1);
+        $this->assertModelMissing($menu2);
 
         $this->assertDatabaseMissing(AdminPermission::class, [
-            'permissionable_id' => $menu['id'],
-            'permissionable_type' => $menu::class,
-            'guard_name' => $menu->guard_name,
+            'permissionable_id' => $menu1['id'],
+            'permissionable_type' => $menu1::class,
+            'guard_name' => $menu1->guard_name,
+        ]);
+
+        $this->assertDatabaseMissing(AdminPermission::class, [
+            'permissionable_id' => $menu2['id'],
+            'permissionable_type' => $menu2::class,
+            'guard_name' => $menu2->guard_name,
         ]);
     }
 

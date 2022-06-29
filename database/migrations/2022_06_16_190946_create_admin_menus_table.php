@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name')->comment('菜单名称');
             $table->string('icon')->nullable()->comment('图标');
             $table->unsignedBigInteger('sort')->default(0)->comment('排列序号');
+            $table->boolean('public')->default(false)->comment('是否公开菜单');
             $table->boolean('default')->default(false)->comment('是否选中');
             $table->boolean('opened')->default(false)->comment('是否展开');
             $table->boolean('status')->default(true)->comment('状态');
