@@ -13,9 +13,11 @@ class AdminPageCreated
      */
     public function __construct(AdminPage $adminPage)
     {
-        $adminPage->permission()->create([
-            'name' => sprintf('%s:%s', $adminPage::class, $adminPage['id']),
-            'guard_name' => $adminPage->guard_name,
-        ]);
+        if (!$adminPage->isPublic()){
+            $adminPage->permission()->create([
+                'name' => sprintf('%s:%s', $adminPage::class, $adminPage['id']),
+                'guard_name' => $adminPage->guard_name,
+            ]);
+        }
     }
 }

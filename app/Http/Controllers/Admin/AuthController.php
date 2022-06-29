@@ -140,7 +140,9 @@ class AuthController extends Controller
         if ($user->isSuper()) {
             $pages = AdminPage::wheres('status', true)->get();
         } else {
-            $pages = $user->permissionables(AdminPage::class, fn(Builder $builder) => $builder->where('status', true));
+            $publicPages = AdminPage::wheres('public', true)->where('status', true)->get();
+            $permissionablePages = $user->permissionables(AdminPage::class, fn(Builder $builder) => $builder->where('status', true));
+            $pages = $publicPages->concat($permissionablePages);
         }
 
         return success('获取页面列表成功', $pages);

@@ -24,6 +24,18 @@ class AdminPageTest extends TestCase
         self::assertEquals($page::class, $page['permission']['permissionable_type']);
     }
 
+    public function testIsPublic()
+    {
+        /** @var AdminPage $page1 */
+        $page1 = AdminPage::factory()->create();
+
+        /** @var AdminPage $page2 */
+        $page2 = AdminPage::factory()->create(['public' => true]);
+
+        self::assertFalse($page1->isPublic());
+        self::assertTrue($page2->isPublic());
+    }
+
     public function testWithPermission()
     {
         AdminPage::factory()->create();
@@ -38,25 +50,43 @@ class AdminPageTest extends TestCase
 
     public function testCreatedAndDeletedEvent()
     {
-        /** @var AdminPage $page */
-        $page = AdminPage::factory()->create();
+        /** @var AdminPage $page1 */
+        $page1 = AdminPage::factory()->create();
 
-        $this->assertModelExists($page);
+        /** @var AdminPage $page2 */
+        $page2 = AdminPage::factory()->create(['public' => true]);
+
+        $this->assertModelExists($page1);
+        $this->assertModelExists($page2);
 
         $this->assertDatabaseHas(AdminPermission::class, [
-            'permissionable_id' => $page['id'],
-            'permissionable_type' => $page::class,
-            'guard_name' => $page->guard_name,
+            'permissionable_id' => $page1['id'],
+            'permissionable_type' => $page1::class,
+            'guard_name' => $page1->guard_name,
         ]);
 
-        $page->delete();
+        $this->assertDatabaseMissing(AdminPermission::class, [
+            'permissionable_id' => $page2['id'],
+            'permissionable_type' => $page2::class,
+            'guard_name' => $page2->guard_name,
+        ]);
 
-        $this->assertModelMissing($page);
+        $page1->delete();
+        $page2->delete();
+
+        $this->assertModelMissing($page1);
+        $this->assertModelMissing($page2);
 
         $this->assertDatabaseMissing(AdminPermission::class, [
-            'permissionable_id' => $page['id'],
-            'permissionable_type' => $page::class,
-            'guard_name' => $page->guard_name,
+            'permissionable_id' => $page1['id'],
+            'permissionable_type' => $page1::class,
+            'guard_name' => $page1->guard_name,
+        ]);
+
+        $this->assertDatabaseMissing(AdminPermission::class, [
+            'permissionable_id' => $page2['id'],
+            'permissionable_type' => $page2::class,
+            'guard_name' => $page2->guard_name,
         ]);
     }
 }

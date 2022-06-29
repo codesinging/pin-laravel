@@ -20,6 +20,7 @@ class AdminPageFactory extends Factory
             'name' => $this->faker->text(10),
             'path' => $this->faker->unique()->filePath(),
             'sort' => $this->faker->numberBetween(100000, 999999),
+            'public' => false,
             'status' => true,
         ];
     }

@@ -18,10 +18,12 @@ class AdminPage extends BaseModel
         'name',
         'path',
         'sort',
+        'public',
         'status',
     ];
 
     protected $casts = [
+        'public' => 'boolean',
         'status' => 'boolean',
     ];
 
@@ -29,6 +31,11 @@ class AdminPage extends BaseModel
         'created' => AdminPageCreated::class,
         'deleted' => AdminPageDeleted::class,
     ];
+
+    public function isPublic(): bool
+    {
+        return (bool)($this->attributes['public'] ?? false);
+    }
 
     public function permission(): MorphOne
     {

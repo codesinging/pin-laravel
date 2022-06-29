@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name')->comment('页面名称');
             $table->string('path')->unique()->comment('页面路径');
             $table->unsignedBigInteger('sort')->default(0);
+            $table->boolean('public')->default(false);
             $table->boolean('status')->default(true);
 
             $table->timestamps();

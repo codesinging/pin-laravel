@@ -161,27 +161,33 @@ class AuthControllerTest extends TestCase
         /** @var AdminPage $page3 */
         $page3 = AdminPage::factory()->create();
 
+        /** @var AdminPage $page4 */
+        $page4 = AdminPage::factory()->create(['public' => true]);
+
         $user1->givePermissionTo($page1->permission);
         $user2->givePermissionTo($page1->permission, $page2->permission);
 
         $this->actingAs($user1)
             ->getJson('api/admin/auth/pages')
-            ->assertJsonCount(1, 'data')
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.*.id', [$page4['id'], $page1['id']])
             ->assertOk();
 
         $this->actingAs($user2)
             ->getJson('api/admin/auth/pages')
-            ->assertJsonCount(2, 'data')
+            ->assertJsonCount(3, 'data')
+            ->assertJsonPath('data.*.id', [$page4['id'], $page1['id'], $page2['id']])
             ->assertOk();
 
         $this->actingAs($user3)
             ->getJson('api/admin/auth/pages')
-            ->assertJsonCount(0, 'data')
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.*.id', [$page4['id']])
             ->assertOk();
 
         $this->actingAs($user4)
             ->getJson('api/admin/auth/pages')
-            ->assertJsonCount(3, 'data')
+            ->assertJsonCount(4, 'data')
             ->assertOk();
     }
 
