@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class AdminPageSeeder extends Seeder
 {
     protected array $pages = [
-        ['name' => '首页', 'path' => '/home'],
+        ['name' => '首页', 'path' => '/home', 'public' => true],
         ['name' => '页面管理', 'path' => '/admin_pages'],
         ['name' => '菜单管理', 'path' => '/admin_menus'],
         ['name' => '角色管理', 'path' => '/admin_roles'],
