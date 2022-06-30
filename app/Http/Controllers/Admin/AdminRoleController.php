@@ -23,13 +23,16 @@ class AdminRoleController extends Controller
      * @title 获取管理员角色列表
      *
      * @param AdminRole $adminRole
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function index(AdminRole $adminRole): JsonResponse
+    public function index(AdminRole $adminRole, Request $request): JsonResponse
     {
-        $lister = $adminRole->lister(function (Builder $builder) {
+        $lister = $adminRole->lister(function (Builder $builder) use ($request) {
             $builder->orderByDesc('sort');
+
+            $request->has('status') and $builder->where('status', $request->boolean('status'));
         });
 
         return success('获取角色列表成功', $lister);
