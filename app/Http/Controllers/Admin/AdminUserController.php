@@ -124,6 +124,10 @@ class AdminUserController extends Controller
      */
     public function permit(AdminUser $adminUser, Request $request): JsonResponse
     {
+        if ($adminUser->isSuper()) {
+            return error(Errors::Forbidden);
+        }
+
         $adminUser->syncPermissions(Arr::wrap($request->get('permissions', [])));
 
         return success('设置管理员权限成功');
@@ -139,6 +143,10 @@ class AdminUserController extends Controller
      */
     public function assign(AdminUser $adminUser, Request $request): JsonResponse
     {
+        if ($adminUser->isSuper()) {
+            return error(Errors::Forbidden);
+        }
+
         $adminUser->syncRoles(Arr::wrap($request->get('roles', [])));
 
         return success('指派管理员角色成功');
