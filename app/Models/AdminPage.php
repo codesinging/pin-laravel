@@ -27,6 +27,10 @@ class AdminPage extends BaseModel
         'status' => 'boolean',
     ];
 
+    protected $with = [
+        'permission',
+    ];
+
     protected $dispatchesEvents = [
         'created' => AdminPageCreated::class,
         'deleted' => AdminPageDeleted::class,

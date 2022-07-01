@@ -8,6 +8,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\Errors;
 use App\Http\Requests\AdminUserRequest;
+use App\Models\AdminAction;
+use App\Models\AdminMenu;
+use App\Models\AdminPage;
 use App\Models\AdminUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -150,5 +153,59 @@ class AdminUserController extends Controller
         $adminUser->syncRoles(Arr::wrap($request->get('roles', [])));
 
         return success('指派管理员角色成功');
+    }
+
+    /**
+     * @title 获取管理员权限页面
+     *
+     * @param AdminUser $adminUser
+     *
+     * @return JsonResponse
+     */
+    public function pages(AdminUser $adminUser): JsonResponse
+    {
+        if ($adminUser->isSuper()) {
+            return error(Errors::Forbidden);
+        }
+
+        $permissionables = $adminUser->permissionables(AdminPage::class);
+
+        return success('获取用户权限页面成功', $permissionables);
+    }
+
+    /**
+     * @title 获取管理员权限菜单
+     *
+     * @param AdminUser $adminUser
+     *
+     * @return JsonResponse
+     */
+    public function menus(AdminUser $adminUser): JsonResponse
+    {
+        if ($adminUser->isSuper()) {
+            return error(Errors::Forbidden);
+        }
+
+        $permissionables = $adminUser->permissionables(AdminMenu::class);
+
+        return success('获取用户权限菜单成功', $permissionables);
+    }
+
+    /**
+     * @title 获取管理员权限动作
+     *
+     * @param AdminUser $adminUser
+     *
+     * @return JsonResponse
+     */
+    public function actions(AdminUser $adminUser): JsonResponse
+    {
+        if ($adminUser->isSuper()) {
+            return error(Errors::Forbidden);
+        }
+
+        $permissionables = $adminUser->permissionables(AdminAction::class);
+
+        return success('获取用户权限动作成功', $permissionables);
     }
 }

@@ -164,8 +164,11 @@ class AuthControllerTest extends TestCase
         /** @var AdminPage $page4 */
         $page4 = AdminPage::factory()->create(['public' => true]);
 
+        /** @var AdminPage $page5 */
+        $page5 = AdminPage::factory()->create(['status' => false]);
+
         $user1->givePermissionTo($page1->permission);
-        $user2->givePermissionTo($page1->permission, $page2->permission);
+        $user2->givePermissionTo($page1->permission, $page2->permission, $page5->permission);
 
         $this->actingAs($user1)
             ->getJson('api/admin/auth/pages')
@@ -217,8 +220,11 @@ class AuthControllerTest extends TestCase
         /** @var AdminMenu $menu4 */
         $menu4 = AdminMenu::factory()->create(['public' => true]);
 
+        /** @var AdminMenu $menu5 */
+        $menu5 = AdminMenu::factory()->create(['status' => false]);
+
         $user1->givePermissionTo($menu1->permission);
-        $user2->givePermissionTo($menu1->permission, $menu2->permission);
+        $user2->givePermissionTo($menu1->permission, $menu2->permission, $menu5->permission);
 
         $this->actingAs($user1)
             ->getJson('api/admin/auth/menus')
