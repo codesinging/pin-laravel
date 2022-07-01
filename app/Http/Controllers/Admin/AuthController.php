@@ -66,7 +66,7 @@ class AuthController extends Controller
         /** @var AdminUser $admin */
         $admin = $request->user();
 
-        $admin->tokens()->where('tokenable_id', $admin['id'])->delete();
+        $admin?->tokens()->where('tokenable_id', $admin['id'])->delete();
 
         return success('注销登录成功');
     }
