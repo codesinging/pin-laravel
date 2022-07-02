@@ -9,6 +9,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\AdminMenuRequest;
 use App\Models\AdminMenu;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @title 后台菜单管理
@@ -19,12 +20,17 @@ class AdminMenuController extends Controller
      * @title 获取菜单列表
      *
      * @param AdminMenu $adminMenu
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function index(AdminMenu $adminMenu): JsonResponse
+    public function index(AdminMenu $adminMenu, Request $request): JsonResponse
     {
-        $menus = $adminMenu->orderByDesc('sort')->get()->toTree();
+        $adminMenu = $adminMenu->orderByDesc('sort');
+
+        $request->has('public') and $adminMenu = $adminMenu->where('public', $request->boolean('public'));
+
+        $menus = $adminMenu->get()->toTree();
 
         return success('获取菜单列表成功', $menus);
     }

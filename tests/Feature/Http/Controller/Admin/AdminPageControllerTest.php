@@ -19,10 +19,28 @@ class AdminPageControllerTest extends TestCase
 
     public function testIndex()
     {
-        $this->seed(AdminPageSeeder::class);
+        $page1 = AdminPage::factory()->create(['sort' => 1]);
+        $page2 = AdminPage::factory()->create(['sort' => 2]);
+        $page3 = AdminPage::factory()->create(['sort' => 3, 'public' => true]);
 
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_pages')
+            ->assertJsonCount(3, 'data')
+            ->assertJsonPath('data.*.id', [$page3['id'], $page2['id'], $page1['id']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_pages?public=0')
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.*.id', [$page2['id'], $page1['id']])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_pages?public=1')
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.*.id', [$page3['id']])
             ->assertJsonPath('code', 0)
             ->assertOk();
     }

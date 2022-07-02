@@ -27,7 +27,7 @@ class AdminMenuControllerTest extends TestCase
             ['name' => '首页', 'page_id' => $page1['id']],
             ['name' => '系统管理', 'children' => [
                 ['name' => '页面管理', 'page_id' => $page2['id']],
-                ['name' => '菜单管理', 'page_id' => $page3['id']],
+                ['name' => '菜单管理', 'page_id' => $page3['id'], 'public' => true],
             ]],
         ];
 
@@ -42,6 +42,19 @@ class AdminMenuControllerTest extends TestCase
             ->assertJsonPath('data.0.permission.permissionable_type', AdminMenu::class)
             ->assertJsonPath('data.0.page.id', $page1['id'])
             ->assertJsonCount(2, 'data.1.children')
+            ->assertJsonPath('data.1.children.0.name', '页面管理')
+            ->assertJsonPath('data.1.children.0.page_id', $page2['id'])
+            ->assertJsonPath('data.1.children.0.page.id', $page2['id'])
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_menus?public=0')
+            ->assertJsonPath('data.0.name', '首页')
+            ->assertJsonPath('data.0.page_id', $page1['id'])
+            ->assertJsonPath('data.0.permission.permissionable_type', AdminMenu::class)
+            ->assertJsonPath('data.0.page.id', $page1['id'])
+            ->assertJsonCount(1, 'data.1.children')
             ->assertJsonPath('data.1.children.0.name', '页面管理')
             ->assertJsonPath('data.1.children.0.page_id', $page2['id'])
             ->assertJsonPath('data.1.children.0.page.id', $page2['id'])

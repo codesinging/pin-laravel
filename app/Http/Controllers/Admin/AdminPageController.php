@@ -10,6 +10,7 @@ use App\Http\Requests\AdminPageRequest;
 use App\Models\AdminPage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 /**
@@ -21,13 +22,15 @@ class AdminPageController extends Controller
      * @title 获取后台页面列表
      *
      * @param AdminPage $adminPage
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function index(AdminPage $adminPage): JsonResponse
+    public function index(AdminPage $adminPage, Request $request): JsonResponse
     {
-        $lister = $adminPage->lister(function (Builder $builder) {
+        $lister = $adminPage->lister(function (Builder $builder) use ($request) {
             $builder->orderByDesc('sort');
+            $request->has('public') and $builder->where('public', $request->boolean('public'));
         });
 
         return success('获取页面列表成功', $lister);
