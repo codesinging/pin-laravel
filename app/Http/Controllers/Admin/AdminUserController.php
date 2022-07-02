@@ -226,4 +226,22 @@ class AdminUserController extends Controller
 
         return success('获取用户权限实体成功', $permissionables);
     }
+
+    /**
+     * @title 获取用户权限
+     *
+     * @param AdminUser $adminUser
+     *
+     * @return JsonResponse
+     */
+    public function permissions(AdminUser $adminUser): JsonResponse
+    {
+        if ($adminUser->isSuper()) {
+            return error(Errors::Forbidden);
+        }
+
+        $permissions = $adminUser->permissions;
+
+        return success('获取用户权限成功', $permissions);
+    }
 }

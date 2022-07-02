@@ -470,4 +470,51 @@ class AdminUserControllerTest extends TestCase
             ->assertJsonPath('data.*.permission.permissionable_type', [$page1::class, $menu2::class, $action2::class])
             ->assertOk();
     }
+
+    public function testPermissions()
+    {
+        /** @var AdminUser $user1 */
+        $user1 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user2 */
+        $user2 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user3 */
+        $user3 = AdminUser::factory()->create();
+
+        /** @var AdminPage $page1 */
+        $page1 = AdminPage::factory()->create();
+
+        /** @var AdminPage $page2 */
+        $page2 = AdminPage::factory()->create();
+
+        /** @var AdminMenu $menu1 */
+        $menu1 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu2 */
+        $menu2 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $action1 */
+        $action1 = AdminAction::factory()->create();
+
+        /** @var AdminMenu $action2 */
+        $action2 = AdminAction::factory()->create();
+
+        $user1->givePermissionTo($page1->permission, $action1->permission);
+        $user2->givePermissionTo($page1->permission, $menu2->permission, $action2->permission);
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_users/' . $user1['id'] . '/permissions')
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.*.permissionable_id', [$page1['id'], $action1['id']])
+            ->assertJsonPath('data.*.permissionable_type', [$page1::class, $action1::class])
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_users/' . $user2['id'] . '/permissions')
+            ->assertJsonCount(3, 'data')
+            ->assertJsonPath('data.*.permissionable_id', [$page1['id'], $menu2['id'], $action2['id']])
+            ->assertJsonPath('data.*.permissionable_type', [$page1::class, $menu2::class, $action2::class])
+            ->assertOk();
+    }
 }
