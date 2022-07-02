@@ -482,6 +482,15 @@ class AdminUserControllerTest extends TestCase
         /** @var AdminUser $user3 */
         $user3 = AdminUser::factory()->create();
 
+        /** @var AdminUser $user4 */
+        $user4 = AdminUser::factory()->create();
+
+        /** @var AdminRole $role1 */
+        $role1 = AdminRole::factory()->create();
+
+        /** @var AdminRole $role2 */
+        $role2 = AdminRole::factory()->create();
+
         /** @var AdminPage $page1 */
         $page1 = AdminPage::factory()->create();
 
@@ -500,8 +509,14 @@ class AdminUserControllerTest extends TestCase
         /** @var AdminMenu $action2 */
         $action2 = AdminAction::factory()->create();
 
+        $role1->givePermissionTo($page1->permission, $page2->permission);
+        $role2->givePermissionTo($menu1->permission, $action1->permission);
+
         $user1->givePermissionTo($page1->permission, $action1->permission);
         $user2->givePermissionTo($page1->permission, $menu2->permission, $action2->permission);
+        $user3->givePermissionTo($page1->permission, $menu2->permission);
+
+        $user3->assignRole($role1, $role2);
 
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_users/' . $user1['id'] . '/permissions')
@@ -515,6 +530,21 @@ class AdminUserControllerTest extends TestCase
             ->assertJsonCount(3, 'data')
             ->assertJsonPath('data.*.permissionable_id', [$page1['id'], $menu2['id'], $action2['id']])
             ->assertJsonPath('data.*.permissionable_type', [$page1::class, $menu2::class, $action2::class])
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_users/' . $user3['id'] . '/permissions')
+            ->assertJsonCount(5, 'data')
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_users/' . $user3['id'] . '/permissions?direct=true')
+            ->assertJsonCount(2, 'data')
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_users/' . $user4['id'] . '/permissions')
+            ->assertJsonCount(0, 'data')
             ->assertOk();
     }
 }
