@@ -70,6 +70,8 @@ class AdminUser extends UserModel implements IsSuper
     {
         $permissions = $this->getAllPermissions();
 
+        // TODO 判断角色状态
+
         if (!empty($type)) {
             $permissions = $permissions->filter(fn(AdminPermission $permission) => $permission['permissionable_type'] === $type);
         }

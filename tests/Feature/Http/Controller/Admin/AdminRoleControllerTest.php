@@ -6,6 +6,9 @@
 
 namespace Tests\Feature\Http\Controller\Admin;
 
+use App\Models\AdminAction;
+use App\Models\AdminMenu;
+use App\Models\AdminPage;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -133,5 +136,51 @@ class AdminRoleControllerTest extends TestCase
         $role->refresh();
 
         self::assertFalse($role->hasAnyPermission(['permission1', 'permission2', 'permission3', 'permission4']));
+    }
+
+    public function testPermissions()
+    {
+        /** @var AdminRole $role1 */
+        $role1 = AdminRole::factory()->create();
+
+        /** @var AdminRole $role2 */
+        $role2 = AdminRole::factory()->create();
+
+        /** @var AdminPage $page1 */
+        $page1 = AdminPage::factory()->create();
+
+        /** @var AdminPage $page2 */
+        $page2 = AdminPage::factory()->create();
+
+        /** @var AdminMenu $menu1 */
+        $menu1 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu2 */
+        $menu2 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $action1 */
+        $action1 = AdminAction::factory()->create();
+
+        /** @var AdminMenu $action2 */
+        $action2 = AdminAction::factory()->create();
+
+        $role1->givePermissionTo($page1->permission, $page2->permission);
+        $role2->givePermissionTo($menu1->permission, $action1->permission);
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_roles/' . $role1['id'] . '/permissions')
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.*.permissionable_id', [$page1['id'], $page2['id']])
+            ->assertJsonPath('data.*.permissionable_type', [$page1::class, $page2::class])
+            ->assertJsonPath('data.*.permissionable.id', [$page1['id'], $page2['id']])
+            ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->getJson('api/admin/admin_roles/' . $role2['id'] . '/permissions')
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.*.permissionable_id', [$menu1['id'], $action1['id']])
+            ->assertJsonPath('data.*.permissionable_type', [$menu1::class, $action1::class])
+            ->assertJsonPath('data.*.permissionable.id', [$menu1['id'], $action1['id']])
+            ->assertOk();
     }
 }

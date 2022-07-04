@@ -85,7 +85,7 @@ class AdminRoleController extends Controller
      */
     public function show(AdminRole $adminRole): JsonResponse
     {
-        return success('获取管理员角色详情成功', $adminRole);
+        return success('获取角色详情成功', $adminRole);
     }
 
     /**
@@ -97,7 +97,7 @@ class AdminRoleController extends Controller
      */
     public function destroy(AdminRole $adminRole): JsonResponse
     {
-        return $adminRole->delete() ? success('删除成功', $adminRole) : error('删除失败');
+        return $adminRole->delete() ? success('删除角色成功', $adminRole) : error('删除失败');
     }
 
     /**
@@ -112,6 +112,20 @@ class AdminRoleController extends Controller
     {
         $adminRole->syncPermissions(Arr::wrap($request->get('permissions', [])));
 
-        return success('设置权限成功');
+        return success('设置角色权限成功');
+    }
+
+    /**
+     * @title 获取角色权限
+     *
+     * @param AdminRole $adminRole
+     *
+     * @return JsonResponse
+     */
+    public function permissions(AdminRole $adminRole): JsonResponse
+    {
+        $permissions = $adminRole->permissions;
+
+        return success('获取角色权限成功', $permissions);
     }
 }
