@@ -30,7 +30,7 @@ class AdminMenuController extends Controller
 
         $request->has('public') and $adminMenu = $adminMenu->where('public', $request->boolean('public'));
 
-        $menus = $adminMenu->get()->toTree();
+        $menus = $adminMenu->with('permission')->get()->toTree();
 
         return success('获取菜单列表成功', $menus);
     }

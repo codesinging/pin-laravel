@@ -24,6 +24,7 @@ class AdminActionControllerTest extends TestCase
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_actions')
             ->assertJsonCount(5, 'data')
+            ->assertJsonStructure(['data' => ['*' => ['permission']]])
             ->assertOk();
     }
 

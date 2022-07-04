@@ -20,6 +20,10 @@ class AdminPermission extends Permission
 
     public string $guard_name = 'sanctum';
 
+    protected $with = [
+        'permissionable',
+    ];
+
     public function permissionable(): MorphTo
     {
         return $this->morphTo();

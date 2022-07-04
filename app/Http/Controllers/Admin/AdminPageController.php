@@ -29,7 +29,7 @@ class AdminPageController extends Controller
     public function index(AdminPage $adminPage, Request $request): JsonResponse
     {
         $lister = $adminPage->lister(function (Builder $builder) use ($request) {
-            $builder->orderByDesc('sort');
+            $builder->orderByDesc('sort')->with('permission');
             $request->has('public') and $builder->where('public', $request->boolean('public'));
         });
 

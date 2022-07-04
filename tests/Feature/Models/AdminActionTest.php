@@ -26,18 +26,6 @@ class AdminActionTest extends TestCase
         self::assertEquals($action::class, $action['permission']['permissionable_type']);
     }
 
-    public function testWithPermission()
-    {
-        AdminAction::factory()->create();
-
-        $action = AdminAction::firsts();
-
-        self::assertArrayHasKey('permission', $action->toArray());
-
-        self::assertEquals($action['id'], $action['permission']['permissionable_id']);
-        self::assertEquals($action::class, $action['permission']['permissionable_type']);
-    }
-
     public function testCreatedAndDeletedEvent()
     {
         /** @var AdminAction $action */

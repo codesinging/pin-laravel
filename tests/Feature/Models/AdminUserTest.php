@@ -90,6 +90,15 @@ class AdminUserTest extends TestCase
         /** @var AdminUser $user4 */
         $user4 = AdminUser::factory()->create();
 
+        /** @var AdminUser $user5 */
+        $user5 = AdminUser::factory()->create();
+
+        /** @var AdminRole $role1 */
+        $role1 = AdminRole::factory()->create();
+
+        /** @var AdminRole $role2 */
+        $role2 = AdminRole::factory()->create();
+
         /** @var AdminPage $page1 */
         $page1 = AdminPage::factory()->create(['status' => false]);
 
@@ -106,11 +115,16 @@ class AdminUserTest extends TestCase
         $user2->givePermissionTo($menu1->permission, $menu2->permission);
         $user3->givePermissionTo($page1->permission, $page2->permission, $menu1->permission);
 
-        self::assertCount(2, $user1->permissionables());
-        self::assertCount(1, $user1->permissionables(AdminPage::class));
+        $role1->givePermissionTo($menu1->permission);
+        $role2->givePermissionTo($page1->permission);
+
+        $user5->assignRole($role1, $role2);
+        $user5->givePermissionTo($menu2->permission);
+
+        self::assertCount(1, $user1->permissionables());
+        self::assertCount(0, $user1->permissionables(AdminPage::class));
         self::assertCount(1, $user1->permissionables(AdminMenu::class));
 
-        self::assertTrue($page1->is($user1->permissionables(AdminPage::class)[0]));
         self::assertTrue($menu1->is($user1->permissionables(AdminMenu::class)[0]));
 
         self::assertCount(2, $user2->permissionables());
@@ -120,16 +134,16 @@ class AdminUserTest extends TestCase
         self::assertTrue($menu1->is($user2->permissionables(AdminMenu::class)[0]));
         self::assertTrue($menu2->is($user2->permissionables(AdminMenu::class)[1]));
 
-        self::assertCount(3, $user3->permissionables());
-        self::assertCount(2, $user3->permissionables(AdminPage::class));
-        self::assertCount(1, $user3->permissionables(AdminPage::class, fn(Builder $builder) => $builder->where('status', true)));
+        self::assertCount(2, $user3->permissionables());
+        self::assertCount(1, $user3->permissionables(AdminPage::class));
         self::assertCount(1, $user3->permissionables(AdminMenu::class));
-
-        self::assertTrue($page1->is($user3->permissionables(AdminPage::class, fn(Builder $builder) => $builder->where('status', false))[0]));
-        self::assertTrue($page2->is($user3->permissionables(AdminPage::class, fn(Builder $builder) => $builder->where('status', true))[0]));
 
         self::assertCount(0, $user4->permissionables());
         self::assertCount(0, $user4->permissionables(AdminPage::class));
         self::assertCount(0, $user4->permissionables(AdminMenu::class));
+
+        self::assertCount(2, $user5->permissionables());
+        self::assertCount(0, $user5->permissionables(AdminPage::class));
+        self::assertCount(2, $user5->permissionables(AdminMenu::class));
     }
 }

@@ -31,10 +31,6 @@ class AdminAction extends BaseModel
         'deleted' => AdminActionDeleted::class,
     ];
 
-    protected $with = [
-        'permission',
-    ];
-
     public function permission(): MorphOne
     {
         return $this->morphOne(AdminPermission::class, 'permissionable');

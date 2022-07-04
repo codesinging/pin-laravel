@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\AdminAction;
 use App\Support\Routing\Router;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Route;
 use ReflectionException;
@@ -26,7 +27,7 @@ class AdminActionController extends Controller
      */
     public function index(AdminAction $adminAction): JsonResponse
     {
-        $lister = $adminAction->lister();
+        $lister = $adminAction->lister(fn(Builder $builder) => $builder->with('permission'));
 
         return success('获取动作列表成功', $lister);
     }

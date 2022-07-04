@@ -141,7 +141,7 @@ class AuthController extends Controller
             $pages = AdminPage::wheres('status', true)->get();
         } else {
             $publicPages = AdminPage::wheres('public', true)->where('status', true)->get();
-            $permissionablePages = $user->permissionables(AdminPage::class, fn(Builder $builder) => $builder->where('status', true));
+            $permissionablePages = $user->permissionables(AdminPage::class);
             $pages = $publicPages->concat($permissionablePages);
         }
 
@@ -164,7 +164,7 @@ class AuthController extends Controller
             $menus = AdminMenu::wheres('status', true)->get();
         } else {
             $publicMenus = AdminMenu::wheres('status', true)->where('public', true)->get();
-            $permissionableMenus = $user->permissionables(AdminMenu::class, fn(Builder $builder) => $builder->where('status', true));
+            $permissionableMenus = $user->permissionables(AdminMenu::class);
             $menus = $publicMenus->concat($permissionableMenus);
         }
 

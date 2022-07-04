@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Support\Model\UserModel;
 use App\Support\Permission\IsSuper;
-use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Collection;
@@ -60,19 +59,25 @@ class AdminUser extends UserModel implements IsSuper
     }
 
     /**
-     * 获取当前用户拥有权限的指定类型的模型列表
+     * 获取管理员权限父模型
      *
-     * @param string|array $types
-     * @param Closure|null $callback
+     * @param string|null $type
+     * @param bool $status
      *
-     * @return \Illuminate\Database\Eloquent\Collection|array|Collection
+     * @return Collection
      */
-    public function permissionables(string|array $types = '*', Closure $callback = null): \Illuminate\Database\Eloquent\Collection|array|Collection
+    public function permissionables(string $type = null, bool $status = true): Collection
     {
-        return $this->permissions()
-            ->with('permissionable')
-            ->whereHasMorph('permissionable', $types, $callback)
-            ->get()
-            ->map(fn(AdminPermission $permission) => $permission->permissionable);
+        $permissions = $this->getAllPermissions();
+
+        if (!empty($type)) {
+            $permissions = $permissions->filter(fn(AdminPermission $permission) => $permission['permissionable_type'] === $type);
+        }
+
+        $permissionables = $permissions->map(fn(AdminPermission $permission) => $permission->permissionable);
+
+        $permissionables = $permissionables->filter(fn($permissionable) => $permissionable['status'] === $status);
+
+        return $permissionables->values();
     }
 }

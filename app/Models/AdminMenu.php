@@ -49,7 +49,6 @@ class AdminMenu extends BaseModel
 
     protected $with = [
         'page',
-        'permission',
     ];
 
     public function isPublic(): bool

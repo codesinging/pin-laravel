@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use App\Support\Model\ModelTraits;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role;
 
+/**
+ * @property Collection|AdminPermission[] $permissions;
+ */
 class AdminRole extends Role
 {
     use ModelTraits;

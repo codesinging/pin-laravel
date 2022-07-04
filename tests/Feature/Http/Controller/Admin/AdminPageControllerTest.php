@@ -26,6 +26,7 @@ class AdminPageControllerTest extends TestCase
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_pages')
             ->assertJsonCount(3, 'data')
+            ->assertJsonStructure(['data' => ['*' => ['permission']]])
             ->assertJsonPath('data.*.id', [$page3['id'], $page2['id'], $page1['id']])
             ->assertJsonPath('code', 0)
             ->assertOk();
