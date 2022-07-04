@@ -151,6 +151,7 @@ class AdminMenuControllerTest extends TestCase
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_menus/' . $menu['id'])
             ->assertJsonPath('data.id', $menu['id'])
+            ->assertJsonPath('data.permission.permissionable_id', $menu['id'])
             ->assertOk();
     }
 

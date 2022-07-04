@@ -95,6 +95,7 @@ class AdminPageControllerTest extends TestCase
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_pages/' . $page['id'])
             ->assertJsonPath('data.name', $page['name'])
+            ->assertJsonPath('data.permission.permissionable_id', $page['id'])
             ->assertOk();
     }
 

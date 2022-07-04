@@ -41,6 +41,7 @@ class AdminActionController extends Controller
      */
     public function show(AdminAction $adminAction): JsonResponse
     {
+        $adminAction = $adminAction->fresh(['permission']);
         return success('获取动作详情成功', $adminAction);
     }
 

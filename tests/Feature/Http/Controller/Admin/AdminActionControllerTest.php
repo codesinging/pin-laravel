@@ -35,6 +35,7 @@ class AdminActionControllerTest extends TestCase
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_actions/' . $action['id'])
             ->assertJsonPath('data.id', $action['id'])
+            ->assertJsonPath('data.permission.permissionable_id', $action['id'])
             ->assertOk();
     }
 

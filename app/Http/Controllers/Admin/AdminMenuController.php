@@ -87,6 +87,7 @@ class AdminMenuController extends Controller
      */
     public function show(AdminMenu $adminMenu): JsonResponse
     {
+        $adminMenu = $adminMenu->fresh(['permission']);
         return success('获取详情成功', $adminMenu);
     }
 

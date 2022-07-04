@@ -83,6 +83,7 @@ class AdminPageController extends Controller
      */
     public function show(AdminPage $adminPage): JsonResponse
     {
+        $adminPage = $adminPage->fresh(['permission']);
         return success('获取后台页面详情成功', $adminPage);
     }
 
