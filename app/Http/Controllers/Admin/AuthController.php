@@ -111,7 +111,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'current_password:sanctum'],
-            'password' => ['required', 'confirmed'],
+            'password' => ['required', 'confirmed', 'different:current_password'],
         ], [], [
             'current_password' => '当前密码',
             'password' => '新密码',

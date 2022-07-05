@@ -130,6 +130,11 @@ class AuthControllerTest extends TestCase
             ->assertStatus(422);
 
         $this->actingAs($admin)
+            ->putJson('api/admin/auth/password', ['password' => 'admin.123', 'password_confirmation' => 'admin.123', 'current_password' => 'admin.123'])
+            ->assertJsonValidationErrors(['password' => ['新密码 和 当前密码 必须不同。']])
+            ->assertStatus(422);
+
+        $this->actingAs($admin)
             ->putJson('api/admin/auth/password', ['password' => '123', 'password_confirmation' => '123', 'current_password' => 'admin.123'])
             ->assertOk();
 
