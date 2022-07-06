@@ -16,7 +16,8 @@ class AdminPageSeeder extends Seeder
         ['name' => '管理员管理', 'path' => '/admin_users'],
         ['name' => '动作管理', 'path' => '/admin_actions'],
         ['name' => '操作日志管理', 'path' => '/admin_logs'],
-        ['name' => '修改密码', 'path' => '/auth_password', 'public' => true],
+        ['name' => '个人中心', 'path' => '/setting/user', 'public' => true],
+        ['name' => '账号设置', 'path' => '/setting/account', 'public' => true],
     ];
 
     /**

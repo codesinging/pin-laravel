@@ -170,4 +170,21 @@ class AuthController extends Controller
 
         return success('获取菜单列表成功', $menus);
     }
+
+    /**
+     * 获取登录用户所有权限列表
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function permissions(Request $request): JsonResponse
+    {
+        /** @var AdminUser $user */
+        $user = $request->user();
+
+        $permissions = $user->getAllPermissions();
+
+        return success('获取权限列表成功', $permissions);
+    }
 }
