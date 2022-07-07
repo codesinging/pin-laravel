@@ -16,6 +16,7 @@ class AdminLog extends BaseModel
 {
     protected $fillable = [
         'user_id',
+        'route_id',
         'method',
         'path',
         'ip',
@@ -31,10 +32,16 @@ class AdminLog extends BaseModel
 
     protected $with = [
         'user',
+        'route',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(AdminUser::class, 'user_id');
+    }
+
+    public function route(): BelongsTo
+    {
+        return $this->belongsTo(AdminRoute::class, 'route_id');
     }
 }

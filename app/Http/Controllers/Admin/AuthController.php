@@ -191,10 +191,10 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function actionLogs(Request $request, AdminLog $adminLog): JsonResponse
+    public function logs(Request $request, AdminLog $adminLog): JsonResponse
     {
         $logs = $adminLog->lister(function () {
-            return $this->authUser()->actionLogs()->latest();
+            return $this->authUser()->logs()->latest();
         });
 
         return success('获取操作日志列表成功', $logs);

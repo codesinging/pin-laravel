@@ -49,7 +49,7 @@ class AdminUser extends UserModel implements IsSuper
         return new Attribute(set: fn($value) => bcrypt($value));
     }
 
-    public function actionLogs(): HasMany
+    public function logs(): HasMany
     {
         return $this->hasMany(AdminLog::class, 'user_id');
     }

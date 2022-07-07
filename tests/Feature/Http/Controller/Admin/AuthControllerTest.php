@@ -321,7 +321,7 @@ class AuthControllerTest extends TestCase
             ->assertOk();
     }
 
-    public function testActionLogs()
+    public function testLogs()
     {
         /** @var AdminUser $user1 */
         $user1 = AdminUser::factory()->create();
@@ -333,12 +333,12 @@ class AuthControllerTest extends TestCase
         AdminLog::factory()->count(3)->create(['user_id' => $user2['id']]);
 
         $this->actingAs($user1)
-            ->getJson('api/admin/auth/action_logs')
+            ->getJson('api/admin/auth/logs')
             ->assertJsonCount(5, 'data')
             ->assertOk();
 
         $this->actingAs($user2)
-            ->getJson('api/admin/auth/action_logs')
+            ->getJson('api/admin/auth/logs')
             ->assertJsonCount(3, 'data')
             ->assertOk();
     }

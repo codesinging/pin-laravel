@@ -9,6 +9,7 @@ use App\Support\Model\BaseModel;
 use App\Support\Reflection\ControllerReflection;
 use App\Support\Routing\Router;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Routing\Route;
 use ReflectionException;
@@ -41,6 +42,11 @@ class AdminRoute extends BaseModel
     public function permission(): MorphOne
     {
         return $this->morphOne(AdminPermission::class, 'permissionable');
+    }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(AdminLog::class, 'route_id');
     }
 
     public function isPublic(): bool

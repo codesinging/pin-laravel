@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('user_id')->comment('操作用户ID');
+            $table->unsignedBigInteger('route_id')->nullable()->comment('请求路由ID');
             $table->string('method', 12)->comment('请求方法');
             $table->string('path')->nullable()->comment('请求路径');
             $table->ipAddress('ip')->nullable()->comment('请求IP地址');
