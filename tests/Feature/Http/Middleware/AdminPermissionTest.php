@@ -8,9 +8,9 @@ namespace Tests\Feature\Http\Middleware;
 
 use App\Exceptions\AdminErrors;
 use App\Http\Controllers\Admin\AdminUserController;
-use App\Models\AdminAction;
+use App\Models\AdminRoute;
 use App\Models\AdminUser;
-use Database\Seeders\AdminActionSeeder;
+use Database\Seeders\AdminRouteSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\ActingAsAdminUser;
 use Tests\TestCase;
@@ -48,7 +48,7 @@ class AdminPermissionTest extends TestCase
 
     public function testCommonUserVisitPermittedRoute()
     {
-        $this->seed(AdminActionSeeder::class);
+        $this->seed(AdminRouteSeeder::class);
 
         /** @var AdminUser $user */
         $user = AdminUser::factory()->create(['super' => false]);
@@ -63,7 +63,7 @@ class AdminPermissionTest extends TestCase
 
     public function testSuperUserVisitPermittedRoute()
     {
-        $this->seed(AdminActionSeeder::class);
+        $this->seed(AdminRouteSeeder::class);
 
         /** @var AdminUser $user */
         $user = AdminUser::factory()->create(['super' => true]);
@@ -77,20 +77,20 @@ class AdminPermissionTest extends TestCase
 
     public function testCommonButHasPermissionUserVisitPermittedRoute()
     {
-        $this->seed(AdminActionSeeder::class);
+        $this->seed(AdminRouteSeeder::class);
 
         /** @var AdminUser $user */
         $user = AdminUser::factory()->create(['super' => false]);
 
         self::assertFalse($user->isSuper());
 
-        $action = AdminAction::findBy(AdminUserController::class.'@index');
+        $route = AdminRoute::findBy(AdminUserController::class.'@index');
 
         $this->actingAs($user)
             ->getJson('api/admin/admin_users')
             ->assertStatus(403);
 
-        $user->givePermissionTo($action->permission);
+        $user->givePermissionTo($route->permission);
 
         $this->actingAs($user)
             ->getJson('api/admin/admin_users')

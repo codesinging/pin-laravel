@@ -7,22 +7,22 @@
 namespace Tests\Feature\Http\Controller\Admin;
 
 use App\Http\Controllers\Admin\AdminUserController;
-use App\Models\AdminAction;
+use App\Models\AdminRoute;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\ActingAsAdminUser;
 use Tests\TestCase;
 
-class AdminActionControllerTest extends TestCase
+class AdminRouteControllerTest extends TestCase
 {
     use RefreshDatabase;
     use ActingAsAdminUser;
 
     public function testIndex()
     {
-        AdminAction::factory()->count(5)->create();
+        AdminRoute::factory()->count(5)->create();
 
         $this->actingAsSuperAdminUser()
-            ->getJson('api/admin/admin_actions')
+            ->getJson('api/admin/admin_routes')
             ->assertJsonCount(5, 'data')
             ->assertJsonStructure(['data' => ['*' => ['permission']]])
             ->assertOk();
@@ -30,37 +30,37 @@ class AdminActionControllerTest extends TestCase
 
     public function testShow()
     {
-        $action = AdminAction::factory()->create();
+        $route = AdminRoute::factory()->create();
 
         $this->actingAsSuperAdminUser()
-            ->getJson('api/admin/admin_actions/' . $action['id'])
-            ->assertJsonPath('data.id', $action['id'])
-            ->assertJsonPath('data.permission.permissionable_id', $action['id'])
+            ->getJson('api/admin/admin_routes/' . $route['id'])
+            ->assertJsonPath('data.id', $route['id'])
+            ->assertJsonPath('data.permission.permissionable_id', $route['id'])
             ->assertOk();
     }
 
     public function testDestroy()
     {
-        $action = AdminAction::factory()->create();
+        $route = AdminRoute::factory()->create();
 
         $this->actingAsSuperAdminUser()
-            ->deleteJson('api/admin/admin_actions/' . $action['id'])
-            ->assertJsonPath('data.id', $action['id'])
+            ->deleteJson('api/admin/admin_routes/' . $route['id'])
+            ->assertJsonPath('data.id', $route['id'])
             ->assertOk();
 
-        $this->assertModelMissing($action);
+        $this->assertModelMissing($route);
     }
 
     public function testSync()
     {
-        $this->assertDatabaseCount(AdminAction::class, 0);
+        $this->assertDatabaseCount(AdminRoute::class, 0);
 
         $this->actingAsSuperAdminUser()
-            ->putJson('api/admin/admin_actions/sync')
+            ->putJson('api/admin/admin_routes/sync')
             ->assertJsonPath('code', 0)
             ->assertOk();
 
-        $this->assertDatabaseHas(AdminAction::class, [
+        $this->assertDatabaseHas(AdminRoute::class, [
             'controller' => AdminUserController::class,
             'action' => 'index',
         ]);

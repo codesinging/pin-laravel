@@ -7,7 +7,7 @@
 namespace App\Http\Middleware;
 
 use App\Exceptions\AdminErrors;
-use App\Models\AdminAction;
+use App\Models\AdminRoute;
 use App\Models\AdminUser;
 use Illuminate\Http\Request;
 
@@ -18,10 +18,10 @@ class AdminPermission
         /** @var AdminUser $user */
         $user = $request->user();
 
-        $adminAction = AdminAction::findBy($request->route());
+        $adminRoute = AdminRoute::findBy($request->route());
 
-        if ($adminAction && $adminAction->permission){
-            if ($user->cannot($adminAction->permission['name'])){
+        if ($adminRoute && $adminRoute->permission){
+            if ($user->cannot($adminRoute->permission['name'])){
                 abort(403, AdminErrors::NoPermission->label());
             }
         }

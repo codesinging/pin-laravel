@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Events\AdminActionCreated;
-use App\Events\AdminActionDeleted;
-use App\Events\AdminActionUpdated;
+use App\Events\AdminRouteCreated;
+use App\Events\AdminRouteDeleted;
+use App\Events\AdminRouteUpdated;
 use App\Support\Model\BaseModel;
 use App\Support\Reflection\ControllerReflection;
 use App\Support\Routing\Router;
@@ -16,7 +16,7 @@ use ReflectionException;
 /**
  * @property AdminPermission $permission
  */
-class AdminAction extends BaseModel
+class AdminRoute extends BaseModel
 {
     public string $guard_name = 'sanctum';
 
@@ -33,9 +33,9 @@ class AdminAction extends BaseModel
     ];
 
     protected $dispatchesEvents = [
-        'created' => AdminActionCreated::class,
-        'updated' => AdminActionUpdated::class,
-        'deleted' => AdminActionDeleted::class,
+        'created' => AdminRouteCreated::class,
+        'updated' => AdminRouteUpdated::class,
+        'deleted' => AdminRouteDeleted::class,
     ];
 
     public function permission(): MorphOne
@@ -53,7 +53,7 @@ class AdminAction extends BaseModel
      *
      * @throws ReflectionException
      */
-    public static function syncFrom(Route|string $route): Model|AdminAction|null
+    public static function syncFrom(Route|string $route): Model|AdminRoute|null
     {
         $router = new Router($route);
         $action = $router->action();

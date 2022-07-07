@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\AdminAction;
+use App\Models\AdminRoute;
 use App\Support\Routing\Router;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Routing\Route;
 use ReflectionException;
 
-class AdminActionSeeder extends Seeder
+class AdminRouteSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,6 +18,6 @@ class AdminActionSeeder extends Seeder
      */
     public function run(): void
     {
-        Router::routes('api/admin')->each(fn(Route $route) => AdminAction::syncFrom($route));
+        Router::routes('api/admin')->each(fn(Route $route) => AdminRoute::syncFrom($route));
     }
 }

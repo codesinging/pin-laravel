@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Http\Controller\Admin;
 
-use App\Models\AdminAction;
+use App\Models\AdminRoute;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;
 use App\Models\AdminPermission;
@@ -158,14 +158,14 @@ class AdminRoleControllerTest extends TestCase
         /** @var AdminMenu $menu2 */
         $menu2 = AdminMenu::factory()->create();
 
-        /** @var AdminMenu $action1 */
-        $action1 = AdminAction::factory()->create();
+        /** @var AdminMenu $route1 */
+        $route1 = AdminRoute::factory()->create();
 
-        /** @var AdminMenu $action2 */
-        $action2 = AdminAction::factory()->create();
+        /** @var AdminMenu $route2 */
+        $route2 = AdminRoute::factory()->create();
 
         $role1->givePermissionTo($page1->permission, $page2->permission);
-        $role2->givePermissionTo($menu1->permission, $action1->permission);
+        $role2->givePermissionTo($menu1->permission, $route1->permission);
 
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_roles/' . $role1['id'] . '/permissions')
@@ -178,9 +178,9 @@ class AdminRoleControllerTest extends TestCase
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_roles/' . $role2['id'] . '/permissions')
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.*.permissionable_id', [$menu1['id'], $action1['id']])
-            ->assertJsonPath('data.*.permissionable_type', [$menu1::class, $action1::class])
-            ->assertJsonPath('data.*.permissionable.id', [$menu1['id'], $action1['id']])
+            ->assertJsonPath('data.*.permissionable_id', [$menu1['id'], $route1['id']])
+            ->assertJsonPath('data.*.permissionable_type', [$menu1::class, $route1::class])
+            ->assertJsonPath('data.*.permissionable.id', [$menu1['id'], $route1['id']])
             ->assertOk();
     }
 }

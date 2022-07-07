@@ -38,8 +38,8 @@ Route::middleware(['auth:sanctum', 'admin.permission', 'admin.operation_log'])
 
         Route::apiResource('admin_menus', Admin\AdminMenuController::class);
 
-        Route::put('admin_actions/sync', [Admin\AdminActionController::class, 'sync']);
-        Route::apiResource('admin_actions', Admin\AdminActionController::class)->only('index', 'show', 'destroy');
+        Route::put('admin_routes/sync', [Admin\AdminRouteController::class, 'sync']);
+        Route::apiResource('admin_routes', Admin\AdminRouteController::class)->only('index', 'show', 'destroy');
 
         Route::apiResource('admin_logs', Admin\AdminLogController::class)->only('index', 'show');
     });

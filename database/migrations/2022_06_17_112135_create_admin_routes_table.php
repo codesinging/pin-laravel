@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admin_actions', function (Blueprint $table) {
+        Schema::create('admin_routes', function (Blueprint $table) {
             $table->id();
 
             $table->string('controller')->comment('控制器');
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin_actions');
+        Schema::dropIfExists('admin_routes');
     }
 };
