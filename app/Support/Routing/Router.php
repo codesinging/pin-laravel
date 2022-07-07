@@ -6,6 +6,7 @@
 
 namespace App\Support\Routing;
 
+use App\Models\AdminRoute;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route as RouteFacade;
@@ -40,6 +41,23 @@ class Router
         $routes = collect(RouteFacade::getRoutes()->getRoutes());
 
         return $prefix ? $routes->filter(fn(Route $route) => $route->getPrefix() === $prefix) : $routes;
+    }
+
+    /**
+     * 判断指定的路由模型是否存在于指定的路由集合中
+     *
+     * @param AdminRoute $adminRoute
+     * @param Collection $routes
+     *
+     * @return bool
+     */
+    public static function exists(AdminRoute $adminRoute, Collection $routes): bool
+    {
+        return $routes->contains(function (Route $route) use ($adminRoute) {
+            $router = new static($route);
+
+            return $router->controller() === $adminRoute['controller'] && $router->action() === $adminRoute['action'];
+        });
     }
 
     /**

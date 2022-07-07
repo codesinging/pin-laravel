@@ -64,5 +64,18 @@ class AdminRouteControllerTest extends TestCase
             'controller' => AdminUserController::class,
             'action' => 'index',
         ]);
+
+        $count = AdminRoute::instance()->count();
+
+        AdminRoute::factory()->count(3)->create();
+
+        $this->assertDatabaseCount(AdminRoute::class, $count + 3);
+
+        $this->actingAsSuperAdminUser()
+            ->putJson('api/admin/admin_routes/sync')
+            ->assertJsonPath('code', 0)
+            ->assertOk();
+
+        $this->assertDatabaseCount(AdminRoute::class, $count);
     }
 }

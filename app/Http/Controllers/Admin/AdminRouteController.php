@@ -10,6 +10,7 @@ use App\Models\AdminRoute;
 use App\Support\Routing\Router;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use ReflectionException;
 
@@ -24,12 +25,17 @@ class AdminRouteController extends Controller
      * @permission
      *
      * @param AdminRoute $adminRoute
+     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function index(AdminRoute $adminRoute): JsonResponse
+    public function index(AdminRoute $adminRoute, Request $request): JsonResponse
     {
-        $lister = $adminRoute->lister(fn(Builder $builder) => $builder->with('permission'));
+        $lister = $adminRoute->lister(function (Builder $builder) use ($request) {
+            $builder->with('permission');
+
+            $request->has('public') and $builder->where('public', $request->boolean('public'));
+        });
 
         return success('获取路由列表成功', $lister);
     }
@@ -69,7 +75,15 @@ class AdminRouteController extends Controller
      */
     public function sync(): JsonResponse
     {
-        Router::routes('api/admin')->each(fn(Route $route) => AdminRoute::syncFrom($route));
+        $routes = Router::routes('api/admin');
+
+        AdminRoute::all()->each(function (AdminRoute $adminRoute) use ($routes){
+            if (!Router::exists($adminRoute, $routes)){
+                $adminRoute->delete();
+            }
+        });
+
+        $routes->each(fn(Route $route) => AdminRoute::syncFrom($route));
 
         return success('同步路由成功');
     }
