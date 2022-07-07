@@ -7,6 +7,7 @@
 namespace Tests\Feature\Http\Controller\Admin;
 
 use App\Exceptions\AdminErrors;
+use App\Models\AdminLog;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;
 use App\Models\AdminRole;
@@ -317,6 +318,28 @@ class AuthControllerTest extends TestCase
         $this->actingAs($user2)
             ->getJson('api/admin/auth/permissions')
             ->assertJsonCount(4, 'data')
+            ->assertOk();
+    }
+
+    public function testActionLogs()
+    {
+        /** @var AdminUser $user1 */
+        $user1 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user2 */
+        $user2 = AdminUser::factory()->create();
+
+        AdminLog::factory()->count(5)->create(['user_id' => $user1['id']]);
+        AdminLog::factory()->count(3)->create(['user_id' => $user2['id']]);
+
+        $this->actingAs($user1)
+            ->getJson('api/admin/auth/action_logs')
+            ->assertJsonCount(5, 'data')
+            ->assertOk();
+
+        $this->actingAs($user2)
+            ->getJson('api/admin/auth/action_logs')
+            ->assertJsonCount(3, 'data')
             ->assertOk();
     }
 }

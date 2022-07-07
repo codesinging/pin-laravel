@@ -6,6 +6,7 @@ use App\Support\Model\UserModel;
 use App\Support\Permission\IsSuper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -46,6 +47,11 @@ class AdminUser extends UserModel implements IsSuper
     protected function password(): Attribute
     {
         return new Attribute(set: fn($value) => bcrypt($value));
+    }
+
+    public function actionLogs(): HasMany
+    {
+        return $this->hasMany(AdminLog::class, 'user_id');
     }
 
     /**

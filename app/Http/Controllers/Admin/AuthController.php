@@ -7,10 +7,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\AdminErrors;
+use App\Models\AdminLog;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;
 use App\Models\AdminUser;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -63,10 +63,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        /** @var AdminUser $admin */
-        $admin = $request->user();
-
-        $admin?->tokens()->where('tokenable_id', $admin['id'])->delete();
+        $this->authUser()?->tokens()->where('tokenable_id', $admin['id'])->delete();
 
         return success('注销登录成功');
     }
@@ -92,8 +89,7 @@ class AuthController extends Controller
      */
     public function update(Request $request): JsonResponse
     {
-        /** @var AdminUser $admin */
-        $admin = $request->user();
+        $admin = $this->authUser();
 
         $admin->update($admin->sanitize($request));
 
@@ -117,10 +113,7 @@ class AuthController extends Controller
             'password' => '新密码',
         ]);
 
-        /** @var AdminUser $admin */
-        $admin = $request->user();
-
-        return $admin->update(['password' => $request->input('password')])
+        return $this->authUser()->update(['password' => $request->input('password')])
             ? success('修改密码成功')
             : error('修改密码失败');
     }
@@ -134,8 +127,7 @@ class AuthController extends Controller
      */
     public function pages(Request $request): JsonResponse
     {
-        /** @var AdminUser $user */
-        $user = $request->user();
+        $user = $this->authUser();
 
         if ($user->isSuper()) {
             $pages = AdminPage::wheres('status', true)->get();
@@ -157,8 +149,7 @@ class AuthController extends Controller
      */
     public function menus(Request $request): JsonResponse
     {
-        /** @var AdminUser $user */
-        $user = $request->user();
+        $user = $this->authUser();
 
         if ($user->isSuper()) {
             $menus = AdminMenu::wheres('status', true)->get();
@@ -180,11 +171,27 @@ class AuthController extends Controller
      */
     public function permissions(Request $request): JsonResponse
     {
-        /** @var AdminUser $user */
-        $user = $request->user();
+        $user = $this->authUser();
 
         $permissions = $user->getAllPermissions();
 
         return success('获取权限列表成功', $permissions);
+    }
+
+    /**
+     * 获取登录用户操作日志列表
+     *
+     * @param Request $request
+     * @param AdminLog $adminLog
+     *
+     * @return JsonResponse
+     */
+    public function actionLogs(Request $request, AdminLog $adminLog): JsonResponse
+    {
+        $logs = $adminLog->lister(function () {
+            return $this->authUser()->actionLogs()->latest();
+        });
+
+        return success('获取操作日志列表成功', $logs);
     }
 }
