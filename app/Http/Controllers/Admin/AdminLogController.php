@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @title 操作日志管理
+ * @permission
+ */
 class AdminLogController extends Controller
 {
     /**

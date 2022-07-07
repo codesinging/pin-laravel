@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Events\AdminActionCreated;
 use App\Events\AdminActionDeleted;
+use App\Events\AdminActionUpdated;
 use App\Support\Model\BaseModel;
-use App\Support\Reflection\TitleReflection;
+use App\Support\Reflection\ControllerReflection;
 use App\Support\Routing\Router;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -24,16 +25,27 @@ class AdminAction extends BaseModel
         'controller_name',
         'action',
         'action_name',
+        'public',
+    ];
+
+    protected $casts = [
+        'public' => 'boolean',
     ];
 
     protected $dispatchesEvents = [
         'created' => AdminActionCreated::class,
+        'updated' => AdminActionUpdated::class,
         'deleted' => AdminActionDeleted::class,
     ];
 
     public function permission(): MorphOne
     {
         return $this->morphOne(AdminPermission::class, 'permissionable');
+    }
+
+    public function isPublic(): bool
+    {
+        return (bool)($this->attributes['public'] ?? false);
     }
 
     /**
@@ -45,22 +57,22 @@ class AdminAction extends BaseModel
     {
         $router = new Router($route);
         $action = $router->action();
+        $controller = $router->controller();
 
-        $reflection = new TitleReflection($router->controller());
-        $controllerName = $reflection->classTitle();
+        $reflection = new ControllerReflection($router->controller());
+        $controllerName = $reflection->controllerTitle();
         $actionName = $reflection->methodTitle($action);
 
-        if (!empty($controllerName) && !empty($actionName)) {
-            return self::instance()->updateOrCreate([
-                'controller' => $router->controller(),
-                'action' => $action,
-            ], [
-                'controller_name' => $controllerName,
-                'action_name' => $actionName,
-            ]);
-        }
+        $isPermissionable = $reflection->isPermissionableController() || $reflection->isPermissionableMethod($action);
 
-        return null;
+        return self::instance()->updateOrCreate([
+            'controller' => $controller,
+            'action' => $action,
+        ], [
+            'controller_name' => $controllerName ?: $controller,
+            'action_name' => $actionName ?: $action,
+            'public' => !$isPermissionable,
+        ]);
     }
 
     /**

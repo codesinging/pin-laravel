@@ -13,6 +13,7 @@ use Tests\TestCase;
 /**
  * @title 类反射测试
  * @author 雨中歌者
+ * @permission
  */
 class ClassReflectionTest extends TestCase
 {
@@ -41,12 +42,32 @@ Comment;
         $this->assertEquals('esinger', $this->reflection->parse($comment, '@author'));
     }
 
+    public function testMatch()
+    {
+        $comment = <<<'Comment'
+    /**
+     * @title title content
+     * @author esinger
+     * @permission
+     *
+     * @param string $comment
+     * @param string $prefix
+     *
+     * @return string|null
+     */
+Comment;
+
+        self::assertEquals(1, $this->reflection->match($comment, '@permission'));
+        self::assertEquals(0, $this->reflection->match($comment, '@permissions'));
+    }
+
     public function testClassComment()
     {
         $comment = <<<'Comment'
 /**
  * @title 类反射测试
  * @author 雨中歌者
+ * @permission
  */
 Comment;
 

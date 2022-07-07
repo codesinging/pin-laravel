@@ -8,9 +8,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\Errors;
 use App\Http\Requests\AdminUserRequest;
-use App\Models\AdminAction;
-use App\Models\AdminMenu;
-use App\Models\AdminPage;
 use App\Models\AdminUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -20,6 +17,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * @title 管理员管理
+ * @permission
  */
 class AdminUserController extends Controller
 {

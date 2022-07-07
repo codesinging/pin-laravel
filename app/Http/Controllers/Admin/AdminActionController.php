@@ -15,11 +15,13 @@ use ReflectionException;
 
 /**
  * @title 后台动作管理
+ * @permission
  */
 class AdminActionController extends Controller
 {
     /**
      * @title 获取动作列表
+     * @permission
      *
      * @param AdminAction $adminAction
      *

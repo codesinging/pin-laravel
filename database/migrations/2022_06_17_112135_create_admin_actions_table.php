@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('controller_name')->comment('控制器名');
             $table->string('action')->comment('动作');
             $table->string('action_name')->comment('动作名');
+            $table->boolean('public')->default(true)->comment('是否公共');
 
             $table->timestamps();
         });

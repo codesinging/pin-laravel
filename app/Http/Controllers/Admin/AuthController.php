@@ -15,10 +15,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @title 管理员认证管理
+ */
 class AuthController extends Controller
 {
     /**
-     * 用户登录
+     * @title 用户登录
      *
      * @param Request $request
      *
@@ -55,7 +58,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 注销登录
+     * @title 注销登录
      *
      * @param Request $request
      *
@@ -63,13 +66,15 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $this->authUser()?->tokens()->where('tokenable_id', $admin['id'])->delete();
+        $admin = $this->authUser();
+
+        $admin?->tokens()->where('tokenable_id', $admin['id'])->delete();
 
         return success('注销登录成功');
     }
 
     /**
-     * 获取登录用户
+     * @title 获取登录用户
      *
      * @param Request $request
      *
@@ -81,7 +86,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 修改个人信息
+     * @title 修改个人信息
      *
      * @param Request $request
      *
@@ -97,7 +102,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 修改密码
+     * @title 修改密码
      *
      * @param Request $request
      *
@@ -119,7 +124,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 获取登录用户拥有权限的页面列表
+     * @title 获取登录用户拥有权限的页面列表
      *
      * @param Request $request
      *
@@ -141,7 +146,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 获取登录用户拥有权限的菜单列表
+     * @title 获取登录用户拥有权限的菜单列表
      *
      * @param Request $request
      *
@@ -163,7 +168,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 获取登录用户所有权限列表
+     * @title 获取登录用户所有权限列表
      *
      * @param Request $request
      *
@@ -179,7 +184,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 获取登录用户操作日志列表
+     * @title 获取登录用户操作日志列表
      *
      * @param Request $request
      * @param AdminLog $adminLog

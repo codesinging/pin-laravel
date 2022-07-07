@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * @title 后台页面管理
+ * @permission
  */
 class AdminPageController extends Controller
 {

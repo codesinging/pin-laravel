@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 /**
  * @title 后台菜单管理
+ * @permission
  */
 class AdminMenuController extends Controller
 {

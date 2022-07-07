@@ -7,6 +7,7 @@
 namespace Tests\Feature\Models;
 
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Models\AdminAction;
 use App\Models\AdminPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,27 +27,63 @@ class AdminActionTest extends TestCase
         self::assertEquals($action::class, $action['permission']['permissionable_type']);
     }
 
-    public function testCreatedAndDeletedEvent()
+    public function testEvents()
     {
-        /** @var AdminAction $action */
-        $action = AdminAction::factory()->create();
+        /** @var AdminAction $action1 */
+        $action1 = AdminAction::factory()->create(['public' => false]);
 
-        $this->assertModelExists($action);
+        /** @var AdminAction $action2 */
+        $action2 = AdminAction::factory()->create(['public' => true]);
+
+        $this->assertModelExists($action1);
+        $this->assertModelExists($action2);
 
         $this->assertDatabaseHas(AdminPermission::class, [
-            'permissionable_id' => $action['id'],
-            'permissionable_type' => $action::class,
-            'guard_name' => $action->guard_name,
+            'permissionable_id' => $action1['id'],
+            'permissionable_type' => $action1::class,
+            'guard_name' => $action1->guard_name,
         ]);
 
-        $action->delete();
+        $this->assertDatabaseMissing(AdminPermission::class, [
+            'permissionable_id' => $action2['id'],
+            'permissionable_type' => $action2::class,
+            'guard_name' => $action2->guard_name,
+        ]);
 
-        $this->assertModelMissing($action);
+        $action1['public'] = true;
+        $action2['public'] = false;
+
+        $action1->save();
+        $action2->save();
 
         $this->assertDatabaseMissing(AdminPermission::class, [
-            'permissionable_id' => $action['id'],
-            'permissionable_type' => $action::class,
-            'guard_name' => $action->guard_name,
+            'permissionable_id' => $action1['id'],
+            'permissionable_type' => $action1::class,
+            'guard_name' => $action1->guard_name,
+        ]);
+
+        $this->assertDatabaseHas(AdminPermission::class, [
+            'permissionable_id' => $action2['id'],
+            'permissionable_type' => $action2::class,
+            'guard_name' => $action2->guard_name,
+        ]);
+
+        $action1->delete();
+        $action2->delete();
+
+        $this->assertModelMissing($action1);
+        $this->assertModelMissing($action2);
+
+        $this->assertDatabaseMissing(AdminPermission::class, [
+            'permissionable_id' => $action1['id'],
+            'permissionable_type' => $action1::class,
+            'guard_name' => $action1->guard_name,
+        ]);
+
+        $this->assertDatabaseMissing(AdminPermission::class, [
+            'permissionable_id' => $action2['id'],
+            'permissionable_type' => $action2::class,
+            'guard_name' => $action2->guard_name,
         ]);
     }
 
@@ -55,21 +92,29 @@ class AdminActionTest extends TestCase
      */
     public function testSyncFrom()
     {
-        $route = AdminUserController::class . '@index';
+        $route1 = AdminUserController::class . '@index';
+        $route2 = AuthController::class . '@user';
 
-        $adminAction = AdminAction::syncFrom($route);
+        $adminAction1 = AdminAction::syncFrom($route1);
+        $adminAction2 = AdminAction::syncFrom($route2);
 
-        $this->assertModelExists($adminAction);
+        self::assertFalse($adminAction1->isPublic());
+        self::assertTrue($adminAction2->isPublic());
 
-        $this->assertDatabaseCount(AdminAction::class, 1);
+        $this->assertModelExists($adminAction1);
+        $this->assertModelExists($adminAction2);
 
-        AdminAction::syncFrom($route);
+        $this->assertDatabaseCount(AdminAction::class, 2);
 
-        $this->assertDatabaseCount(AdminAction::class, 1);
+        AdminAction::syncFrom($route1);
+        AdminAction::syncFrom($route2);
 
-        $this->assertModelExists($adminAction->permission);
+        $this->assertDatabaseCount(AdminAction::class, 2);
 
-        self::assertEquals($adminAction['id'], $adminAction->permission['permissionable_id']);
+        $this->assertModelExists($adminAction1->permission);
+        $this->assertNull($adminAction2->permission);
+
+        self::assertEquals($adminAction1['id'], $adminAction1->permission['permissionable_id']);
     }
 
     /**

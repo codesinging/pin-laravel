@@ -4,7 +4,7 @@ namespace App\Events;
 
 use App\Models\AdminAction;
 
-class AdminActionCreated
+class AdminActionUpdated
 {
     /**
      * Create a new event instance.
@@ -13,8 +13,10 @@ class AdminActionCreated
      */
     public function __construct(AdminAction $adminAction)
     {
-        if (!$adminAction->isPublic()){
-            $adminAction->permission()->create([
+        if ($adminAction->isPublic()){
+            $adminAction->permission()->delete();
+        } else {
+            $adminAction->permission()->firstOrCreate([
                 'name' => sprintf('%s:%s', $adminAction::class, $adminAction['id']),
                 'guard_name' => $adminAction->guard_name,
             ]);

@@ -16,6 +16,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * @title 管理员角色管理
+ * @permission
  */
 class AdminRoleController extends Controller
 {

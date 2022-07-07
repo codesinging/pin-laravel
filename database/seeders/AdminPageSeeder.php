@@ -18,6 +18,7 @@ class AdminPageSeeder extends Seeder
         ['name' => '登录日志管理', 'path' => '/login_logs'],
         ['name' => '操作日志管理', 'path' => '/admin_logs'],
         ['name' => '个人中心', 'path' => '/user/home', 'public' => true],
+        ['name' => '登录日志', 'path' => '/user/login_logs', 'public' => true],
         ['name' => '操作日志', 'path' => '/user/action_logs', 'public' => true],
         ['name' => '权限列表', 'path' => '/user/permissions', 'public' => true],
         ['name' => '修改信息', 'path' => '/user/profile', 'public' => true],

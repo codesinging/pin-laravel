@@ -21,6 +21,7 @@ class AdminActionFactory extends Factory
             'controller_name' => $this->faker->text(20),
             'action' => $this->faker->word,
             'action_name' => $this->faker->text(20),
+            'public' => false,
         ];
     }
 }

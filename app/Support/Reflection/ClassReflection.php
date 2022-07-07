@@ -40,6 +40,19 @@ class ClassReflection
     }
 
     /**
+     * 注释中是否存在指定的内容
+     *
+     * @param string $comment
+     * @param string $search
+     *
+     * @return bool|int
+     */
+    public function match(string $comment, string $search): bool|int
+    {
+        return preg_match("#\*\s*{$search}\s*\n#", $comment);
+    }
+
+    /**
      * 获取类注释
      *
      * @return bool|string

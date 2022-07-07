@@ -345,7 +345,6 @@ class AdminUserControllerTest extends TestCase
 
         $this->actingAsSuperAdminUser()
             ->getJson('api/admin/admin_users/' . $user3['id'] . '/permissions')
-            ->dump()
             ->assertJsonCount(5, 'data')
             ->assertOk();
 
