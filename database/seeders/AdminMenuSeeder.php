@@ -29,8 +29,9 @@ class AdminMenuSeeder extends Seeder
                 ['name' => '菜单管理', 'page_id' => $this->pageId('/admin_menus'), 'icon' => 'bi-list', 'sort' => 98],
                 ['name' => '角色管理', 'page_id' => $this->pageId('/admin_roles'), 'icon' => 'bi-people', 'sort' => 97],
                 ['name' => '管理员管理', 'page_id' => $this->pageId('/admin_users'), 'icon' => 'bi-person', 'sort' => 96],
-                ['name' => '动作管理', 'page_id' => $this->pageId('/admin_actions'), 'icon' => 'bi-shield-check', 'sort' => 95],
-                ['name' => '操作日志管理', 'page_id' => $this->pageId('/admin_logs'), 'icon' => 'bi-file-earmark-text', 'sort' => 94],
+                ['name' => '路由管理', 'page_id' => $this->pageId('/admin_routes'), 'icon' => 'bi-shield-check', 'sort' => 95],
+                ['name' => '登录日志管理', 'page_id' => $this->pageId('/admin_logins'), 'icon' => 'bi-door-open', 'sort' => 94],
+                ['name' => '操作日志管理', 'page_id' => $this->pageId('/admin_logs'), 'icon' => 'bi-file-earmark-text', 'sort' => 93],
             ]],
         ];
     }
