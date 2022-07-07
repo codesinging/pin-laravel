@@ -24,6 +24,8 @@ class AdminLogController extends Controller
     public function index(AdminLog $adminLog, Request $request): JsonResponse
     {
         $lister = $adminLog->lister(function (Builder $builder) use ($request) {
+            $builder->latest();
+
             if ($request->has('method')) {
                 $builder->where('method', $request->input('method'));
             }
