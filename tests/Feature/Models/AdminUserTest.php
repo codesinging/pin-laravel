@@ -105,6 +105,9 @@ class AdminUserTest extends TestCase
         /** @var AdminPage $page2 */
         $page2 = AdminPage::factory()->create();
 
+        /** @var AdminPage $page3 */
+        $page3 = AdminPage::factory()->create(['public' => true]);
+
         /** @var AdminMenu $menu1 */
         $menu1 = AdminMenu::factory()->create();
 

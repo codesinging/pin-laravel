@@ -159,6 +159,15 @@ class AuthControllerTest extends TestCase
         /** @var AdminUser $user4 */
         $user4 = AdminUser::factory()->create(['super' => true]);
 
+        /** @var AdminUser $user5 */
+        $user5 = AdminUser::factory()->create();
+
+        /** @var AdminRole $role1 */
+        $role1 = AdminRole::factory()->create();
+
+        /** @var AdminRole $role2 */
+        $role2 = AdminRole::factory()->create();
+
         /** @var AdminPage $page1 */
         $page1 = AdminPage::factory()->create();
 
@@ -176,6 +185,11 @@ class AuthControllerTest extends TestCase
 
         $user1->givePermissionTo($page1->permission);
         $user2->givePermissionTo($page1->permission, $page2->permission, $page5->permission);
+
+        $role1->givePermissionTo($page1->permission);
+
+        $user5->assignRole($role1, $role2);
+        $user5->givePermissionTo($page3->permission, $page5->permission);
 
         $this->actingAs($user1)
             ->getJson('api/admin/auth/pages')
@@ -198,6 +212,12 @@ class AuthControllerTest extends TestCase
         $this->actingAs($user4)
             ->getJson('api/admin/auth/pages')
             ->assertJsonCount(4, 'data')
+            ->assertOk();
+
+        $this->actingAs($user5)
+            ->getJson('api/admin/auth/pages')
+            ->assertJsonCount(3, 'data')
+            ->assertJsonPath('data.*.id', [$page4['id'], $page1['id'], $page3['id']])
             ->assertOk();
     }
 
