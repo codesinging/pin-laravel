@@ -358,4 +358,21 @@ class AdminUserControllerTest extends TestCase
             ->assertJsonCount(0, 'data')
             ->assertOk();
     }
+
+    public function testReset()
+    {
+        $admin = AdminUser::factory()->create();
+
+        $admin->update(['login_error_count' => 2]);
+
+        self::assertEquals(2, $admin['login_error_count']);
+
+        $this->actingAsSuperAdminUser()
+            ->putJson('api/admin/admin_users/' . $admin['id'] . '/reset')
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertEquals(0, $admin['login_error_count']);
+    }
 }

@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum', 'admin.permission', 'admin.operation_log'])
         Route::put('admin_users/{admin_user}/permit', [Admin\AdminUserController::class, 'permit']);
         Route::put('admin_users/{admin_user}/assign', [Admin\AdminUserController::class, 'assign']);
         Route::get('admin_users/{admin_user}/permissions', [Admin\AdminUserController::class, 'permissions']);
+        Route::put('admin_users/{admin_user}/reset', [Admin\AdminUserController::class, 'reset']);
         Route::apiResource('admin_users', Admin\AdminUserController::class);
 
         Route::put('admin_roles/{admin_role}/permit', [Admin\AdminRoleController::class, 'permit']);

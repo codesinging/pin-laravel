@@ -173,4 +173,15 @@ class AdminUserController extends Controller
 
         return success('获取用户权限成功', $permissions);
     }
+
+    public function reset(AdminUser $adminUser): JsonResponse
+    {
+        if ($adminUser->isSuper()) {
+            return error(Errors::Forbidden);
+        }
+
+        $adminUser->update(['login_error_count' => 0]);
+
+        return success('重置登录错误次数成功');
+    }
 }
