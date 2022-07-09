@@ -20,6 +20,7 @@ Route::middleware(['auth:sanctum', 'admin.permission', 'admin.operation_log'])
         Route::get('auth/menus', [Admin\AuthController::class, 'menus']);
         Route::get('auth/permissions', [Admin\AuthController::class, 'permissions']);
         Route::get('auth/logs', [Admin\AuthController::class, 'logs']);
+        Route::get('auth/logins', [Admin\AuthController::class, 'logins']);
 
         Route::put('admin_users/{admin_user}/permit', [Admin\AdminUserController::class, 'permit']);
         Route::put('admin_users/{admin_user}/assign', [Admin\AdminUserController::class, 'assign']);

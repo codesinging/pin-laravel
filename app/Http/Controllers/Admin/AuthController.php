@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\AdminErrors;
 use App\Models\AdminLog;
+use App\Models\AdminLogin;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;
 use App\Models\AdminUser;
@@ -218,5 +219,22 @@ class AuthController extends Controller
         });
 
         return success('获取操作日志列表成功', $logs);
+    }
+
+    /**
+     * @title 获取登录用户登录日志列表
+     *
+     * @param Request $request
+     * @param AdminLogin $adminLogin
+     *
+     * @return JsonResponse
+     */
+    public function logins(Request $request, AdminLogin $adminLogin): JsonResponse
+    {
+        $logins = $adminLogin->lister(function () {
+            return $this->authUser()->logins()->latest();
+        });
+
+        return success('获取操作日志列表成功', $logins);
     }
 }

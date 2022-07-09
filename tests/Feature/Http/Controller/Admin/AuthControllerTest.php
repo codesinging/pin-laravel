@@ -398,4 +398,27 @@ class AuthControllerTest extends TestCase
             ->assertJsonCount(3, 'data')
             ->assertOk();
     }
+
+    public function testLogins()
+    {
+        /** @var AdminUser $user1 */
+        $user1 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user2 */
+        $user2 = AdminUser::factory()->create();
+
+        $user1->login('1', false, 1, 'msg');
+        $user1->login('1', false, 1, 'msg');
+        $user2->login('1', false, 1, 'msg');
+
+        $this->actingAs($user1)
+            ->getJson('api/admin/auth/logins')
+            ->assertJsonCount(2, 'data')
+            ->assertOk();
+
+        $this->actingAs($user2)
+            ->getJson('api/admin/auth/logins')
+            ->assertJsonCount(1, 'data')
+            ->assertOk();
+    }
 }
