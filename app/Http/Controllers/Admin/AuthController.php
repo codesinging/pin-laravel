@@ -45,15 +45,22 @@ class AuthController extends Controller
         }
 
         if ($admin['login_error_count'] >= config('admin.login_error_limit')) {
+            $admin->login($request->ip(), false, AdminErrors::AuthLoginErrorLimit->value, AdminErrors::AuthLoginErrorLimit->label());
+
             return error(AdminErrors::AuthLoginErrorLimit, 1, ['login_error_count' => $admin['login_error_count']]);
         }
 
         if (!Hash::check($request->input('password'), $admin['password'])) {
             $admin->increment('login_error_count');
+
+            $admin->login($request->ip(), false, AdminErrors::AuthNotMatched->value, AdminErrors::AuthNotMatched->label());
+
             return error(AdminErrors::AuthNotMatched, 1, ['login_error_count' => $admin['login_error_count']]);
         }
 
         if (!$admin['status']) {
+            $admin->login($request->ip(), false, AdminErrors::AuthInvalidStatus->value, AdminErrors::AuthInvalidStatus->label());
+
             return error(AdminErrors::AuthInvalidStatus);
         }
 
@@ -62,6 +69,8 @@ class AuthController extends Controller
             'last_login_time' => now(),
             'last_login_ip' => $request->ip(),
         ]);
+
+        $admin->login($request->ip(), true, 0, '登录成功');
 
         $token = $admin->createToken($request->input('device', ''))->plainTextToken;
 

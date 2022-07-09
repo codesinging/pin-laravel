@@ -6,6 +6,7 @@
 
 namespace Tests\Feature\Models;
 
+use App\Models\AdminLogin;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;
 use App\Models\AdminUser;
@@ -52,6 +53,35 @@ class AdminUserTest extends TestCase
         $admin->save();
 
         self::assertTrue(Hash::check('admin.444', $admin['password']));
+    }
+
+    public function testLogin()
+    {
+        /** @var AdminUser $admin */
+        $admin = AdminUser::factory()->create();
+
+        $ip = request()->ip();
+
+        $admin->login($ip, false, 1, 'error');
+        $admin->login($ip, true, 0, 'success');
+
+        $this->assertDatabaseCount(AdminLogin::class, 2);
+
+        $this->assertDatabaseHas(AdminLogin::class, [
+            'user_id' => $admin['id'],
+            'ip' => $ip,
+            'result' => false,
+            'code' => 1,
+            'message' => 'error',
+        ]);
+
+        $this->assertDatabaseHas(AdminLogin::class, [
+            'user_id' => $admin['id'],
+            'ip' => $ip,
+            'result' => true,
+            'code' => 0,
+            'message' => 'success',
+        ]);
     }
 
     public function testRelationOfRoles()

@@ -38,4 +38,5 @@ Route::middleware(['auth:sanctum', 'admin.permission', 'admin.operation_log'])
         Route::apiResource('admin_routes', Admin\AdminRouteController::class)->only('index', 'show', 'destroy');
 
         Route::apiResource('admin_logs', Admin\AdminLogController::class)->only('index', 'show');
+        Route::apiResource('admin_logins', Admin\AdminLoginController::class)->only('index', 'show');
     });
