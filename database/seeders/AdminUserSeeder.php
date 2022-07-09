@@ -23,6 +23,14 @@ class AdminUserSeeder extends Seeder
             'status' => true,
         ]);
 
+        AdminUser::creates([
+            'username' => 'esinger',
+            'name' => '雨中歌者',
+            'password' => 'admin.123',
+            'super' => false,
+            'status' => true,
+        ]);
+
         AdminUser::factory()->count(5)->create();
     }
 }
