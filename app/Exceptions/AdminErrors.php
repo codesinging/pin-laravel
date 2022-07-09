@@ -22,6 +22,7 @@ enum AdminErrors: int implements ErrorLabel
     case AuthUserNotFound = 900100;
     case AuthNotMatched = 900101;
     case AuthInvalidStatus = 900102;
+    case AuthLoginErrorLimit = 900103;
 
     case NoPermission = 900200;
 
@@ -32,6 +33,7 @@ enum AdminErrors: int implements ErrorLabel
             self::AuthUserNotFound => '登录用户不存在',
             self::AuthNotMatched => '账号和密码不匹配',
             self::AuthInvalidStatus => '账号状态异常',
+            self::AuthLoginErrorLimit => '登录错误次数达到限制',
 
             self::NoPermission => '无访问权限',
         };

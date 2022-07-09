@@ -44,13 +44,24 @@ class AuthController extends Controller
             return error(AdminErrors::AuthUserNotFound);
         }
 
+        if ($admin['login_error_count'] >= config('admin.login_error_limit')) {
+            return error(AdminErrors::AuthLoginErrorLimit, 1, ['login_error_count' => $admin['login_error_count']]);
+        }
+
         if (!Hash::check($request->input('password'), $admin['password'])) {
-            return error(AdminErrors::AuthNotMatched);
+            $admin->increment('login_error_count');
+            return error(AdminErrors::AuthNotMatched, 1, ['login_error_count' => $admin['login_error_count']]);
         }
 
         if (!$admin['status']) {
             return error(AdminErrors::AuthInvalidStatus);
         }
+
+        $admin->update([
+            'login_count' => $admin['login_count'] + 1,
+            'last_login_time' => now(),
+            'last_login_ip' => $request->ip(),
+        ]);
 
         $token = $admin->createToken($request->input('device', ''))->plainTextToken;
 

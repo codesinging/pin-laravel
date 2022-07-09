@@ -28,6 +28,10 @@ class AdminUser extends UserModel implements IsSuper
         'name',
         'password',
         'super',
+        'login_count',
+        'login_error_count',
+        'last_login_time',
+        'last_login_ip',
         'status',
     ];
 
@@ -38,6 +42,7 @@ class AdminUser extends UserModel implements IsSuper
     protected $casts = [
         'super' => 'boolean',
         'status' => 'boolean',
+        'last_login_time' => 'datetime',
     ];
 
     protected $with = [

@@ -50,10 +50,46 @@ class AuthControllerTest extends TestCase
 
         $admin->update(['status' => true]);
 
+        $this->freezeSecond();
+
         $this->putJson('api/admin/auth/login', ['username' => 'admin', 'password' => 'admin.123'])
             ->assertJsonPath('code', 0)
             ->assertJsonPath('data.admin.username', 'admin')
             ->assertJsonStructure(['code', 'message', 'data' => ['admin', 'token']])
+            ->assertOk();
+
+        $admin->refresh();
+
+        self::assertEquals(1, $admin['login_count']);
+        self::assertEquals(now(), $admin['last_login_time']);
+        self::assertEquals(request()->ip(), $admin['last_login_ip']);
+
+        AdminUser::factory()->create(['username' => 'test', 'password' => '1']);
+
+        config(['admin.login_error_limit' => 3]);
+
+        $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
+            ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
+            ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
+            ->assertJsonPath('data.login_error_count', 1)
+            ->assertOk();
+
+        $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
+            ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
+            ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
+            ->assertJsonPath('data.login_error_count', 2)
+            ->assertOk();
+
+        $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
+            ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
+            ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
+            ->assertJsonPath('data.login_error_count', 3)
+            ->assertOk();
+
+        $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
+            ->assertJsonPath('code', AdminErrors::AuthLoginErrorLimit->value)
+            ->assertJsonPath('message', AdminErrors::AuthLoginErrorLimit->label())
+            ->assertJsonPath('data.login_error_count', 3)
             ->assertOk();
     }
 
