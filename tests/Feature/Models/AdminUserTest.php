@@ -10,7 +10,6 @@ use App\Models\AdminMenu;
 use App\Models\AdminPage;
 use App\Models\AdminUser;
 use App\Models\AdminRole;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -74,6 +73,45 @@ class AdminUserTest extends TestCase
         self::assertArrayHasKey('roles', $admins[0]);
         self::assertCount(2, $admins[0]['roles']);
         self::assertEquals('role1', $admins[0]['roles'][0]['name']);
+    }
+
+    public function testGetPermissionsViaRoles()
+    {
+        /** @var AdminUser $user1 */
+        $user1 = AdminUser::factory()->create();
+
+        /** @var AdminUser $user2 */
+        $user2 = AdminUser::factory()->create();
+
+        /** @var AdminRole $role1 */
+        $role1 = AdminRole::factory()->create();
+
+        /** @var AdminRole $role2 */
+        $role2 = AdminRole::factory()->create(['status' => false]);
+
+        /** @var AdminMenu $menu1 */
+        $menu1 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu2 */
+        $menu2 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu3 */
+        $menu3 = AdminMenu::factory()->create();
+
+        /** @var AdminMenu $menu4 */
+        $menu4 = AdminMenu::factory()->create();
+
+        $role1->givePermissionTo($menu1->permission, $menu2->permission);
+        $role2->givePermissionTo($menu1->permission, $menu2->permission);
+
+        $user1->givePermissionTo($menu3->permission);
+        $user2->givePermissionTo($menu4->permission);
+
+        $user1->assignRole($role1);
+        $user2->assignRole($role2);
+
+        self::assertCount(3, $user1->getAllPermissions());
+        self::assertCount(1, $user2->getAllPermissions());
     }
 
     public function testPermissionables()
@@ -148,5 +186,12 @@ class AdminUserTest extends TestCase
         self::assertCount(2, $user5->permissionables());
         self::assertCount(0, $user5->permissionables(AdminPage::class));
         self::assertCount(2, $user5->permissionables(AdminMenu::class));
+
+        $role1->update(['status' => false]);
+        $user5->refresh();
+
+        self::assertCount(1, $user5->permissionables());
+        self::assertCount(0, $user5->permissionables(AdminPage::class));
+        self::assertCount(1, $user5->permissionables(AdminMenu::class));
     }
 }

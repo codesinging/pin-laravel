@@ -65,6 +65,21 @@ class AdminUser extends UserModel implements IsSuper
     }
 
     /**
+     * 重构获取通过角色赋予的权限，过滤掉禁用状态的角色的权限
+     *
+     * @return Collection
+     */
+    public function getPermissionsViaRoles(): Collection
+    {
+        return $this->loadMissing('roles', 'roles.permissions')
+            ->roles
+            ->filter(fn($role) => $role['status'])
+            ->flatMap(fn($role) => $role->permissions)
+            ->sort()
+            ->values();
+    }
+
+    /**
      * 获取管理员权限父模型
      *
      * @param string|null $type
@@ -75,8 +90,6 @@ class AdminUser extends UserModel implements IsSuper
     public function permissionables(string $type = null, bool $status = true): Collection
     {
         $permissions = $this->getAllPermissions();
-
-        // TODO 判断角色状态
 
         if (!empty($type)) {
             $permissions = $permissions->filter(fn(AdminPermission $permission) => $permission['permissionable_type'] === $type);
