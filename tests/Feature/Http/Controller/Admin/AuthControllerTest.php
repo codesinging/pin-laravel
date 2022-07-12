@@ -71,25 +71,25 @@ class AuthControllerTest extends TestCase
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
             ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
-            ->assertJsonPath('data.login_error_count', 1)
+            ->assertJsonPath('data.error_count', 1)
             ->assertOk();
 
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
             ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
-            ->assertJsonPath('data.login_error_count', 2)
+            ->assertJsonPath('data.error_count', 2)
             ->assertOk();
 
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
             ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
-            ->assertJsonPath('data.login_error_count', 3)
+            ->assertJsonPath('data.error_count', 3)
             ->assertOk();
 
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthLoginErrorLimit->value)
             ->assertJsonPath('message', AdminErrors::AuthLoginErrorLimit->label())
-            ->assertJsonPath('data.login_error_count', 3)
+            ->assertJsonPath('data.error_count', 3)
             ->assertOk();
     }
 
