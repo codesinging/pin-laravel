@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Support;
 
-use App\Exceptions\Errors;
+use App\Enums\Errors;
 use Illuminate\Http\JsonResponse;
 use Tests\TestCase;
 

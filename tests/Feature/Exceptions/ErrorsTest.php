@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Exceptions;
 
-use App\Exceptions\Errors;
+use App\Enums\Errors;
 use Tests\TestCase;
 
 class ErrorsTest extends TestCase

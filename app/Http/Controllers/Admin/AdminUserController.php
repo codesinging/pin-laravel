@@ -6,7 +6,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exceptions\Errors;
+use App\Enums\Errors;
 use App\Http\Requests\AdminUserRequest;
 use App\Models\AdminUser;
 use Illuminate\Database\Eloquent\Builder;

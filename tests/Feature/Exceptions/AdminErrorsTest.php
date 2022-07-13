@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Exceptions;
 
-use App\Exceptions\AdminErrors;
+use App\Enums\AdminErrors;
 use Tests\TestCase;
 
 class AdminErrorsTest extends TestCase

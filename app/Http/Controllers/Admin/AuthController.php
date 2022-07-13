@@ -6,7 +6,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exceptions\AdminErrors;
+use App\Enums\AdminErrors;
 use App\Models\AdminLog;
 use App\Models\AdminLogin;
 use App\Models\AdminMenu;

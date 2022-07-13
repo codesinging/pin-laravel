@@ -6,12 +6,13 @@
 
 namespace App\Exceptions;
 
+use App\Enums\Errors;
 use Throwable;
 
 /**
  * 通用异常类
  */
-class Exception extends ApiException
+class Exception extends \Exception
 {
     public function __construct(string|Errors $message = "", int $code = 1, ?Throwable $previous = null)
     {

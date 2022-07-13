@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Http\Controller\Admin;
 
-use App\Exceptions\AdminErrors;
+use App\Enums\AdminErrors;
 use App\Models\AdminLog;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;

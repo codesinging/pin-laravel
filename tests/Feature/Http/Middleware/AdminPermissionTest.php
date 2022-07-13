@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Http\Middleware;
 
-use App\Exceptions\AdminErrors;
+use App\Enums\AdminErrors;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Models\AdminRoute;
 use App\Models\AdminUser;

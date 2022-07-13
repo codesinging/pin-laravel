@@ -6,8 +6,8 @@
 
 namespace App\Support\Routing;
 
-use App\Exceptions\AdminErrors;
-use App\Exceptions\Errors;
+use App\Enums\AdminErrors;
+use App\Enums\Errors;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;

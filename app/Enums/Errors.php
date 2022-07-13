@@ -4,8 +4,9 @@
  * Github: https://github.com/codesinging
  */
 
-namespace App\Exceptions;
+namespace App\Enums;
 
+use App\Support\Miscellaneous\EnumLabel;
 use ArchTech\Enums\InvokableCases;
 
 /**
@@ -14,7 +15,7 @@ use ArchTech\Enums\InvokableCases;
  * @method static int Error()
  * @method static int Forbidden()
  */
-enum Errors: int implements ErrorLabel
+enum Errors: int implements EnumLabel
 {
     use InvokableCases;
 

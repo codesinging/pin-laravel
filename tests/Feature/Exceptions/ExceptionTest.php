@@ -6,8 +6,7 @@
 
 namespace Tests\Feature\Exceptions;
 
-use App\Exceptions\AdminErrors;
-use App\Exceptions\Errors;
+use App\Enums\Errors;
 use App\Exceptions\Exception;
 use Tests\TestCase;
 

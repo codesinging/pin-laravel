@@ -6,13 +6,13 @@
 
 namespace Tests\Feature\Http\Controller\Admin;
 
-use App\Exceptions\Errors;
-use App\Models\AdminRoute;
+use App\Enums\Errors;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;
-use App\Models\AdminUser;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
+use App\Models\AdminRoute;
+use App\Models\AdminUser;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;

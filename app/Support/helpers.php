@@ -4,8 +4,8 @@
  * Github: https://github.com/codesinging
  */
 
-use App\Exceptions\AdminErrors;
-use App\Exceptions\Errors;
+use App\Enums\AdminErrors;
+use App\Enums\Errors;
 use App\Support\Routing\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;

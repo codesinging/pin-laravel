@@ -6,7 +6,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Exceptions\AdminErrors;
+use App\Enums\AdminErrors;
 use App\Models\AdminRoute;
 use App\Models\AdminUser;
 use Illuminate\Http\Request;

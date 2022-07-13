@@ -4,9 +4,9 @@
  * Github: https://github.com/codesinging
  */
 
-namespace App\Exceptions;
+namespace App\Support\Miscellaneous;
 
-interface ErrorLabel
+interface EnumLabel
 {
     /**
      * @return string

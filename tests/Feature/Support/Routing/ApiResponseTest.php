@@ -6,7 +6,7 @@
 
 namespace Tests\Feature\Support\Routing;
 
-use App\Exceptions\Errors;
+use App\Enums\Errors;
 use App\Support\Routing\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Tests\TestCase;
