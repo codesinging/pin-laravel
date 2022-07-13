@@ -4,9 +4,9 @@
  * Github: https://github.com/codesinging
  */
 
-namespace Tests\Feature\Support\Helpers;
+namespace Tests\Feature\Support\Miscellaneous;
 
-use App\Support\Helpers\Snowflake;
+use App\Support\Miscellaneous\Snowflake;
 use Tests\TestCase;
 
 class SnowflakeTest extends TestCase

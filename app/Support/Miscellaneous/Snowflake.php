@@ -4,7 +4,7 @@
  * Github: https://github.com/codesinging
  */
 
-namespace App\Support\Helpers;
+namespace App\Support\Miscellaneous;
 
 class Snowflake
 {
