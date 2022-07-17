@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             AdminPageSeeder::class,
             AdminMenuSeeder::class,
             AdminRouteSeeder::class,
+            SettingGroupSeeder::class,
+            SettingOptionSeeder::class,
         ]);
     }
 }

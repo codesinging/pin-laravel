@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SettingGroup>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Setting>
  */
-class SettingGroupFactory extends Factory
+class SettingFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +18,10 @@ class SettingGroupFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word(),
+            'group_id' => $this->faker->numberBetween(1, 100),
+            'option_id' => $this->faker->numberBetween(1, 100),
             'key' => $this->faker->unique()->word(),
-            'description' => $this->faker->text(30),
-            'sort' => $this->faker->numberBetween(1, 10000),
+            'value' => $this->faker->text(10),
         ];
     }
 }

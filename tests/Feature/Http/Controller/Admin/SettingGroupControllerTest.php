@@ -31,25 +31,35 @@ class SettingGroupControllerTest extends TestCase
         $this->assertDatabaseCount(SettingGroup::class, 0);
 
         $this->actingAsSuperAdminUser()
-            ->postJson('api/admin/setting_groups', ['name' => 'test'])
+            ->postJson('api/admin/setting_groups', ['name' => 'test', 'key' => 'test'])
             ->assertJsonPath('data.name', 'test')
             ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->postJson('api/admin/setting_groups', ['name' => 'test2', 'key' => 'test'])
+            ->assertStatus(422);
 
         $this->assertDatabaseCount(SettingGroup::class, 1);
     }
 
     public function testUpdate()
     {
-        $group = SettingGroup::factory()->create(['name' => 'test1']);
+        SettingGroup::factory()->create(['name' => 'test', 'key' => 'test']);
+
+        $group = SettingGroup::factory()->create(['name' => 'test1', 'key' => 'test1']);
 
         $this->actingAsSuperAdminUser()
-            ->putJson('api/admin/setting_groups/' . $group['id'], ['name' => 'test2'])
-            ->assertJsonPath('data.name', 'test2')
+            ->putJson('api/admin/setting_groups/' . $group['id'], ['name' => 'test11', 'key' => 'test1'])
+            ->assertJsonPath('data.name', 'test11')
             ->assertOk();
+
+        $this->actingAsSuperAdminUser()
+            ->putJson('api/admin/setting_groups/' . $group['id'], ['name' => 'test11', 'key' => 'test'])
+            ->assertStatus(422);
 
         $group->refresh();
 
-        self::assertEquals('test2', $group['name']);
+        self::assertEquals('test11', $group['name']);
     }
 
     public function testShow()

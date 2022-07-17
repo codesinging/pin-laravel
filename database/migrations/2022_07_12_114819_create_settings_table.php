@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('setting_groups', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name')->comment('分组名称');
-            $table->string('key')->unique()->comment('分组键名');
-            $table->string('description')->nullable()->comment('分组描述');
-            $table->integer('sort')->default(0)->comment('排列序号');
+            $table->unsignedBigInteger('group_id')->comment('配置分组ID');
+            $table->unsignedBigInteger('option_id')->comment('配置选项ID');
+            $table->string('key')->unique()->comment('配置键');
+            $table->json('value')->nullable()->comment('配置值');
 
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('setting_groups');
+        Schema::dropIfExists('settings');
     }
 };

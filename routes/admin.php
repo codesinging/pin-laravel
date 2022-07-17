@@ -43,4 +43,9 @@ Route::middleware(['auth:sanctum', 'admin.permission', 'admin.operation_log'])
         Route::apiResource('admin_logins', Admin\AdminLoginController::class)->only('index', 'show');
 
         Route::apiResource('setting_groups', Admin\SettingGroupController::class);
+
+        Route::get('setting_options/types', [Admin\SettingOptionController::class, 'types']);
+        Route::apiResource('setting_options', Admin\SettingOptionController::class);
+
+        Route::put('settings/{setting}', [Admin\SettingController::class, 'update']);
     });

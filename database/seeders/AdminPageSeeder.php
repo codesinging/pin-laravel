@@ -3,18 +3,20 @@
 namespace Database\Seeders;
 
 use App\Models\AdminPage;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AdminPageSeeder extends Seeder
 {
     protected array $pages = [
         ['name' => '首页', 'path' => '/home', 'public' => true],
+        ['name' => '系统设置', 'path' => '/settings'],
         ['name' => '页面管理', 'path' => '/admin_pages'],
         ['name' => '菜单管理', 'path' => '/admin_menus'],
         ['name' => '角色管理', 'path' => '/admin_roles'],
         ['name' => '管理员管理', 'path' => '/admin_users'],
         ['name' => '路由管理', 'path' => '/admin_routes'],
+        ['name' => '设置分组管理', 'path' => '/setting_groups'],
+        ['name' => '设置选项管理', 'path' => '/setting_options'],
         ['name' => '登录日志管理', 'path' => '/admin_logins'],
         ['name' => '操作日志管理', 'path' => '/admin_logs'],
         ['name' => '个人中心', 'path' => '/user/home', 'public' => true],
