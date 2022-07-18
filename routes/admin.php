@@ -7,6 +7,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin;
 
+Route::get('auth/config', [Admin\AuthController::class, 'config']);
 Route::put('auth/login', [Admin\AuthController::class, 'login']);
 Route::put('auth/logout', [Admin\AuthController::class, 'logout']);
 

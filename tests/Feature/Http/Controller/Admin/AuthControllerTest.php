@@ -15,14 +15,32 @@ use App\Models\AdminUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Mews\Captcha\Facades\Captcha;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function testConfig()
+    {
+        config(['admin.captcha_enabled' => false]);
+
+        $this->getJson('api/admin/auth/config')
+            ->assertJsonPath('data.captchaEnabled', false)
+            ->assertOk();
+
+        config(['admin.captcha_enabled' => true]);
+
+        $this->getJson('api/admin/auth/config')
+            ->assertJsonPath('data.captchaEnabled', true)
+            ->assertOk();
+    }
+
     public function testLogin()
     {
+        config(['admin.captcha_enabled' => false]);
+
         $this->putJson('api/admin/auth/login')
             ->assertStatus(422)
             ->assertJsonStructure(['message', 'errors' => ['username', 'password']]);
@@ -93,9 +111,20 @@ class AuthControllerTest extends TestCase
             ->assertOk();
     }
 
+    public function testLoginWithCaptcha()
+    {
+        config(['admin.captcha_enabled' => true]);
+
+        $this->putJson('api/admin/auth/login', ['username' => 'admin', 'password' => 'admin.123'])
+            ->assertJsonValidationErrors(['captcha'])
+            ->assertStatus(422);
+    }
+
     public function testLogout()
     {
         $admin = AdminUser::factory()->create(['password' => 'admin.123', 'status' => true]);
+
+        config(['admin.captcha_enabled' => false]);
 
         $this->putJson('api/admin/auth/login', ['username' => $admin['username'], 'password' => 'admin.123'])
             ->assertOk();

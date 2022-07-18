@@ -22,6 +22,17 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     /**
+     * @title 获取登录设置信息
+     * @return JsonResponse
+     */
+    public function config(): JsonResponse
+    {
+        $captchaEnabled = config('admin.captcha_enabled', false);
+
+        return success('获取登录设置信息成功', compact('captchaEnabled'));
+    }
+
+    /**
      * @title 用户登录
      *
      * @param Request $request
@@ -37,6 +48,17 @@ class AuthController extends Controller
             'username' => '登录账号',
             'password' => '登录密码',
         ]);
+
+        $captchaEnabled = config('admin.captcha_enabled', false);
+
+        if ($captchaEnabled) {
+            $request->validate([
+                'captcha' => 'required|captcha_api:' . $request->input('key'),
+            ], [
+                'captcha.required' => '验证码不能为空',
+                'captcha.captcha_api' => '验证码不正确',
+            ]);
+        }
 
         /** @var AdminUser $admin */
         $admin = AdminUser::wheres('username', $request->input('username'))->first();
