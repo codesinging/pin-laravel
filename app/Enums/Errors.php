@@ -6,28 +6,28 @@
 
 namespace App\Enums;
 
-use App\Support\Miscellaneous\EnumLabel;
+use App\Enums\MetaProperties\Description;
 use ArchTech\Enums\InvokableCases;
+use ArchTech\Enums\Meta\Meta;
+use ArchTech\Enums\Metadata;
 
 /**
  * 通用错误
  *
  * @method static int Error()
  * @method static int Forbidden()
+ *
+ * @method string description()
  */
-enum Errors: int implements EnumLabel
+#[Meta(Description::class)]
+enum Errors: int
 {
     use InvokableCases;
+    use Metadata;
 
+    #[Description('响应错误')]
     case Error = 1;
 
+    #[Description('禁止操作')]
     case Forbidden = 900001;
-
-    public function label(): string
-    {
-        return match ($this) {
-            self::Error => '响应错误',
-            self::Forbidden => '禁止操作',
-        };
-    }
 }

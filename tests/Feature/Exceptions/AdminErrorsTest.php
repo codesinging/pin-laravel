@@ -16,8 +16,8 @@ class AdminErrorsTest extends TestCase
         self::assertEquals(AdminErrors::Error->value, AdminErrors::Error());
     }
 
-    public function testLabel()
+    public function testDescription()
     {
-        self::assertEquals('响应错误', AdminErrors::Error->label());
+        self::assertEquals('响应错误', AdminErrors::Error->description());
     }
 }

@@ -40,7 +40,7 @@ class AdminExceptionTest extends TestCase
     public function testExceptionWithErrorCode()
     {
         $this->expectExceptionCode(AdminErrors::Error());
-        $this->expectExceptionMessage(AdminErrors::Error->label());
+        $this->expectExceptionMessage(AdminErrors::Error->description());
         throw new AdminException(AdminErrors::Error);
     }
 }

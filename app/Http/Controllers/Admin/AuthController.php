@@ -71,7 +71,7 @@ class AuthController extends Controller
         $loginErrorLimit = config('admin.login_error_limit', 5);
 
         if ($admin['login_error_count'] >= $loginErrorLimit) {
-            $admin->login($request->ip(), false, AdminErrors::AuthLoginErrorLimit->value, AdminErrors::AuthLoginErrorLimit->label());
+            $admin->login($request->ip(), false, AdminErrors::AuthLoginErrorLimit->value, AdminErrors::AuthLoginErrorLimit->description());
 
             return error(AdminErrors::AuthLoginErrorLimit, 1, [
                 'error_count' => $admin['login_error_count'],
@@ -82,7 +82,7 @@ class AuthController extends Controller
         if (!Hash::check($request->input('password'), $admin['password'])) {
             $admin->increment('login_error_count');
 
-            $admin->login($request->ip(), false, AdminErrors::AuthNotMatched->value, AdminErrors::AuthNotMatched->label());
+            $admin->login($request->ip(), false, AdminErrors::AuthNotMatched->value, AdminErrors::AuthNotMatched->description());
 
             return error(AdminErrors::AuthNotMatched, 1, [
                 'error_count' => $admin['login_error_count'],
@@ -91,7 +91,7 @@ class AuthController extends Controller
         }
 
         if (!$admin['status']) {
-            $admin->login($request->ip(), false, AdminErrors::AuthInvalidStatus->value, AdminErrors::AuthInvalidStatus->label());
+            $admin->login($request->ip(), false, AdminErrors::AuthInvalidStatus->value, AdminErrors::AuthInvalidStatus->description());
 
             return error(AdminErrors::AuthInvalidStatus);
         }

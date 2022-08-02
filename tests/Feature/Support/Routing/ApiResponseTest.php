@@ -34,7 +34,7 @@ class ApiResponseTest extends TestCase
         self::assertEquals('error', ApiResponse::error('error')->getData(true)['message']);
         self::assertEquals(1, ApiResponse::error('error')->getData(true)['code']);
         self::assertEquals(900100, ApiResponse::error('error', 900100)->getData(true)['code']);
-        self::assertEquals(Errors::Error->label(), ApiResponse::error(Errors::Error)->getData(true)['message']);
+        self::assertEquals(Errors::Error->description(), ApiResponse::error(Errors::Error)->getData(true)['message']);
         self::assertEquals(Errors::Error(), ApiResponse::error(Errors::Error)->getData(true)['code']);
     }
 }

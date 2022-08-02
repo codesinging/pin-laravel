@@ -18,7 +18,7 @@ class Exception extends \Exception
     {
         if ($message instanceof Errors) {
             $code = $message->value;
-            $message = $message->label();
+            $message = $message->description();
         }
         parent::__construct($message, $code, $previous);
     }

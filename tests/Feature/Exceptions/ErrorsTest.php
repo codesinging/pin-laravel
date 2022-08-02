@@ -16,8 +16,8 @@ class ErrorsTest extends TestCase
         self::assertEquals(Errors::Error->value, Errors::Error());
     }
 
-    public function testLabel()
+    public function testDescription()
     {
-        self::assertEquals('响应错误', Errors::Error->label());
+        self::assertEquals('响应错误', Errors::Error->description());
     }
 }

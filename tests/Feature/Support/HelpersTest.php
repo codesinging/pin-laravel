@@ -33,7 +33,7 @@ class HelpersTest extends TestCase
         self::assertEquals('error', error('error')->getData(true)['message']);
         self::assertEquals(1, error('error')->getData(true)['code']);
         self::assertEquals(900100, error('error', 900100)->getData(true)['code']);
-        self::assertEquals(Errors::Error->label(), error(Errors::Error)->getData(true)['message']);
+        self::assertEquals(Errors::Error->description(), error(Errors::Error)->getData(true)['message']);
         self::assertEquals(Errors::Error(), error(Errors::Error)->getData(true)['code']);
     }
 }

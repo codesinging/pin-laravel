@@ -57,7 +57,7 @@ class AdminPermissionTest extends TestCase
 
         $this->actingAs($user)
             ->getJson('api/admin/admin_users')
-            ->assertJsonPath('message', AdminErrors::NoPermission->label())
+            ->assertJsonPath('message', AdminErrors::NoPermission->description())
             ->assertStatus(403);
     }
 

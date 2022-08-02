@@ -22,7 +22,7 @@ class AdminPermission
 
         if ($adminRoute && $adminRoute->permission){
             if ($user->cannot($adminRoute->permission['name'])){
-                abort(403, AdminErrors::NoPermission->label());
+                abort(403, AdminErrors::NoPermission->description());
             }
         }
 

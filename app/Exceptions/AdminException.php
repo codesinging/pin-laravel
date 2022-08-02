@@ -18,7 +18,7 @@ class AdminException extends \Exception
     {
         if ($message instanceof AdminErrors) {
             $code = $message->value;
-            $message = $message->label();
+            $message = $message->description();
         }
         parent::__construct($message, $code, $previous);
     }

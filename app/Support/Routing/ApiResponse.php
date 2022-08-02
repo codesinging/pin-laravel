@@ -42,7 +42,7 @@ class ApiResponse
     {
         if ($message instanceof Errors || $message instanceof AdminErrors) {
             $code = $message->value;
-            $message = $message->label();
+            $message = $message->description();
         }
         return response()->json(compact('message', 'code', 'data'));
     }

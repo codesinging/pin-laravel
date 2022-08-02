@@ -47,7 +47,7 @@ class AuthControllerTest extends TestCase
 
         $this->putJson('api/admin/auth/login', ['username' => 'admin', 'password' => 'admin.123'])
             ->assertJsonPath('code', AdminErrors::AuthUserNotFound->value)
-            ->assertJsonPath('message', AdminErrors::AuthUserNotFound->label())
+            ->assertJsonPath('message', AdminErrors::AuthUserNotFound->description())
             ->assertOk();
 
         $admin = AdminUser::factory()->create([
@@ -58,12 +58,12 @@ class AuthControllerTest extends TestCase
 
         $this->putJson('api/admin/auth/login', ['username' => 'admin', 'password' => 'admin.111'])
             ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
-            ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
+            ->assertJsonPath('message', AdminErrors::AuthNotMatched->description())
             ->assertOk();
 
         $this->putJson('api/admin/auth/login', ['username' => 'admin', 'password' => 'admin.123'])
             ->assertJsonPath('code', AdminErrors::AuthInvalidStatus->value)
-            ->assertJsonPath('message', AdminErrors::AuthInvalidStatus->label())
+            ->assertJsonPath('message', AdminErrors::AuthInvalidStatus->description())
             ->assertOk();
 
         $admin->update(['status' => true]);
@@ -88,25 +88,25 @@ class AuthControllerTest extends TestCase
 
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
-            ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
+            ->assertJsonPath('message', AdminErrors::AuthNotMatched->description())
             ->assertJsonPath('data.error_count', 1)
             ->assertOk();
 
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
-            ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
+            ->assertJsonPath('message', AdminErrors::AuthNotMatched->description())
             ->assertJsonPath('data.error_count', 2)
             ->assertOk();
 
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthNotMatched->value)
-            ->assertJsonPath('message', AdminErrors::AuthNotMatched->label())
+            ->assertJsonPath('message', AdminErrors::AuthNotMatched->description())
             ->assertJsonPath('data.error_count', 3)
             ->assertOk();
 
         $this->putJson('api/admin/auth/login', ['username' => 'test', 'password' => '2'])
             ->assertJsonPath('code', AdminErrors::AuthLoginErrorLimit->value)
-            ->assertJsonPath('message', AdminErrors::AuthLoginErrorLimit->label())
+            ->assertJsonPath('message', AdminErrors::AuthLoginErrorLimit->description())
             ->assertJsonPath('data.error_count', 3)
             ->assertOk();
     }

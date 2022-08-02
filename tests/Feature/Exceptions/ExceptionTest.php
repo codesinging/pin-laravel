@@ -40,7 +40,7 @@ class ExceptionTest extends TestCase
     public function testExceptionWithErrorCode()
     {
         $this->expectExceptionCode(Errors::Error());
-        $this->expectExceptionMessage(Errors::Error->label());
+        $this->expectExceptionMessage(Errors::Error->description());
         throw new Exception(Errors::Error);
     }
 }
