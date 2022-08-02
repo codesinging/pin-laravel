@@ -450,4 +450,37 @@ class AuthControllerTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertOk();
     }
+
+    public function testLastLogin()
+    {
+        /** @var AdminUser $user */
+        $user = AdminUser::factory()->create();
+
+        $this->actingAs($user)
+            ->getJson('api/admin/auth/last_login')
+            ->assertJsonPath('data', null)
+            ->assertOk();
+
+        $login1 = $user->login('1', false, 1, 'msg');
+
+        $this->actingAs($user)
+            ->getJson('api/admin/auth/last_login')
+            ->assertJsonPath('data', null)
+            ->assertOk();
+
+        $login2 = $user->login('2', false, 2, 'msg');
+
+        $this->actingAs($user)
+            ->getJson('api/admin/auth/last_login')
+            ->assertJsonPath('data.id', $login1['id'])
+            ->assertOk();
+
+        $login3 = $user->login('3', false, 3, 'msg');
+        $login4 = $user->login('4', false, 4, 'msg');
+
+        $this->actingAs($user)
+            ->getJson('api/admin/auth/last_login')
+            ->assertJsonPath('data.id', $login3['id'])
+            ->assertOk();
+    }
 }

@@ -268,4 +268,18 @@ class AuthController extends Controller
 
         return success('获取操作日志列表成功', $logins);
     }
+
+    /**
+     * @title 获取上一次登录日志
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function lastLogin(Request $request): JsonResponse
+    {
+        $login = $this->authUser()->logins()->latest('id')->offset(1)->first();
+
+        return success('获取上一次登录日志成功', $login);
+    }
 }
