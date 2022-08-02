@@ -12,6 +12,7 @@ use App\Models\AdminLogin;
 use App\Models\AdminMenu;
 use App\Models\AdminPage;
 use App\Models\AdminUser;
+use App\Support\Miscellaneous\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +28,7 @@ class AuthController extends Controller
      */
     public function config(): JsonResponse
     {
-        $captchaEnabled = config('admin.captcha_enabled', false);
+        $captchaEnabled = Setting::get('admin_captcha_enabled', config('admin.captcha_enabled', false));
 
         return success('获取登录设置信息成功', compact('captchaEnabled'));
     }
@@ -67,7 +68,7 @@ class AuthController extends Controller
             return error(AdminErrors::AuthUserNotFound);
         }
 
-        $loginErrorLimit = config('admin.login_error_limit');
+        $loginErrorLimit = config('admin.login_error_limit', 5);
 
         if ($admin['login_error_count'] >= $loginErrorLimit) {
             $admin->login($request->ip(), false, AdminErrors::AuthLoginErrorLimit->value, AdminErrors::AuthLoginErrorLimit->label());
